@@ -1,0 +1,8 @@
+{
+  "name": "스쿨패스365",
+  "description": "학교 대체인력·활동인력 근무기록 관리, 모바일 전자서명 및 확인서 발급 자동화 시스템 (Google 스프레드시트 연동 지원)",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,2694 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>스쿨사인 365 - 모바일 출근확인서 전자서명</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    :root {
+      --color-bg: #FFFFFF;
+      --color-surface: #EEF1F8;
+      --color-text: #1B2340;
+      --color-primary: #2C3E70;
+      --color-accent: #E4633F;
+
+      --color-surface-hover: #E3E8F4;
+      --color-surface-border: #DCE3F1;
+      --color-shadow-light: #FFFFFF;
+      --color-shadow-dark: #D1D8E7;
+      --color-text-muted: #53607E;
+      --color-primary-hover: #223158;
+      --color-accent-hover: #D15230;
+    }
+
+    * { font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+    body { background-color: var(--color-bg); color: var(--color-text); margin: 0; padding: 0; }
+    
+    /* 교육행정 신뢰 디자인 시스템 */
+    .neu-card-top {
+      background: var(--color-surface);
+      border-radius: 28px;
+      box-shadow: 10px 10px 24px var(--color-shadow-dark), -10px -10px 24px var(--color-shadow-light),
+                  inset 2px 2px 4px rgba(255, 255, 255, 0.8), inset -2px -2px 4px rgba(180, 195, 220, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    .neu-card {
+      background: var(--color-surface);
+      border-radius: 20px;
+      box-shadow: 8px 8px 18px var(--color-shadow-dark), -8px -8px 18px var(--color-shadow-light);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    .neu-inset-bar {
+      background: var(--color-surface);
+      border-radius: 14px;
+      box-shadow: inset 3px 3px 6px var(--color-shadow-dark), inset -3px -3px 6px var(--color-shadow-light);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .neu-inset-box {
+      background: #FFFFFF;
+      color: var(--color-text);
+      border-radius: 12px;
+      border: 1.5px solid var(--color-surface-border);
+      box-shadow: inset 2px 2px 4px rgba(209, 216, 231, 0.4);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+    .neu-inset-box:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(44, 62, 112, 0.15);
+    }
+    .neu-button {
+      background: var(--color-surface);
+      border-radius: 14px;
+      box-shadow: 4px 4px 10px var(--color-shadow-dark), -4px -4px 10px var(--color-shadow-light);
+      transition: all 0.15s ease;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      color: var(--color-text);
+      cursor: pointer;
+    }
+    .neu-button:active, .neu-button.active {
+      box-shadow: inset 3px 3px 6px var(--color-shadow-dark), inset -3px -3px 6px var(--color-shadow-light);
+      background: #DEE4F1;
+    }
+    .neu-button-primary {
+      background: var(--color-primary);
+      color: white;
+      border-radius: 14px;
+      box-shadow: 4px 4px 12px rgba(44, 62, 112, 0.25);
+      font-weight: 600;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .neu-button-primary:hover {
+      background: var(--color-primary-hover);
+    }
+    .neu-button-primary:active {
+      box-shadow: inset 2px 2px 5px rgba(0,0,0,0.3);
+    }
+    .neu-button-accent {
+      background: var(--color-accent);
+      color: white;
+      border-radius: 14px;
+      box-shadow: 4px 4px 12px rgba(228, 99, 63, 0.3);
+      font-weight: 600;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .neu-button-accent:hover {
+      background: var(--color-accent-hover);
+    }
+    .neu-button-accent:active {
+      box-shadow: inset 2px 2px 5px rgba(0,0,0,0.3);
+    }
+    .neu-circle-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--color-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 5px 5px 10px var(--color-shadow-dark), -5px -5px 10px var(--color-shadow-light);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+      color: var(--color-primary);
+    }
+    .neu-bottom-bar {
+      background: rgba(238, 241, 248, 0.95);
+      border-radius: 36px;
+      box-shadow: 0 12px 30px rgba(27, 35, 64, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    .neu-nav-active {
+      background: var(--color-primary) !important;
+      color: #ffffff !important;
+      box-shadow: inset 2px 2px 4px rgba(0,0,0,0.2) !important;
+    }
+
+    /* 화면에서는 인쇄 영역들을 완벽하게 숨김 (모바일 화면 및 관리자 모드 하단 노출 완전 방지) */
+    #printArea, #printQrPosterArea {
+      display: none !important;
+    }
+
+    @media print {
+      body { background: white !important; color: black !important; padding: 0 !important; margin: 0 !important; }
+      .no-print, #workerContainer, #adminContainer, #recordModal, #batchSignModal, #edufineModal, #settingsModal, #qrModal, .neu-bottom-bar, #workerClosedCard {
+        display: none !important;
+      }
+      
+      /* 기본 출근대장 인쇄 모드 */
+      body:not(.print-mode-qr) #printArea {
+        display: block !important;
+      }
+      body:not(.print-mode-qr) #printQrPosterArea {
+        display: none !important;
+      }
+
+      /* QR 비치용 포스터 단독 인쇄 모드 */
+      body.print-mode-qr #printArea {
+        display: none !important;
+      }
+      body.print-mode-qr #printQrPosterArea {
+        display: block !important;
+      }
+    }
+    /* 모바일 iOS Safari 및 브라우저 기본 스타일 초기화 (시인성 극대화) */
+    .mobile-input {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-color: #ffffff !important;
+      border: 2px solid #cbd5e1 !important;
+      color: #0f172a !important;
+    }
+    .mobile-input:focus {
+      border-color: #10b981 !important;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+    }
+  </style>
+</head>
+<body class="p-3 sm:p-6 pb-28">
+
+  <!-- ==========================================
+       [모바일 전용] 대체인력 출근 서명 화면 (QR 스캔 시)
+       ========================================== -->
+  <div id="workerContainer" class="hidden max-w-lg mx-auto px-2 py-4">
+    <!-- 상단 헤더 -->
+    <div class="neu-card p-6 sm:p-7 bg-[#EEF1F8] mb-5 text-center">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-slate-600 neu-inset-bar mb-2">
+        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+        스쿨사인 365
+      </span>
+      <h2 class="text-xl sm:text-2xl font-black text-slate-700 tracking-tight">
+        스쿨사인 365 모바일 출근 서명
+      </h2>
+      <p class="text-xs text-slate-500 mt-1">
+        오늘 근무하신 일자와 시간을 확인하시고 서명 후 제출해 주세요.
+      </p>
+    </div>
+
+    <!-- 1. 작성 폼 카드 -->
+    <div id="workerFormCard" class="neu-card p-5 sm:p-6 bg-[#EEF1F8]">
+      <form onsubmit="handleWorkerSubmit(event)" class="space-y-4">
+        <!-- 1. 활동 직종 (시인성 극대화 화이트 카드) -->
+        <div class="bg-white border-2 border-slate-300 rounded-2xl p-4 shadow-sm space-y-1.5">
+          <label class="block text-xs font-black text-slate-800 flex items-center gap-1.5">
+            <i data-lucide="briefcase" class="w-4 h-4 text-blue-600"></i>
+            <span>활동 직종 (인력 유형) <span class="text-rose-500">*</span></span>
+          </label>
+          <div class="relative">
+            <select id="wWorkerType" onchange="onWorkerTypeSelectChange()" class="mobile-input w-full px-4 py-3.5 rounded-xl text-base font-black text-slate-900 shadow-sm outline-none cursor-pointer bg-slate-50 border-2 border-slate-300 focus:border-blue-600 focus:bg-white">
+              <!-- JS 동적 주입 -->
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-slate-600">
+              <i data-lucide="chevron-down" class="w-5 h-5"></i>
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-500">※ 본인의 담당 활동 직종을 선택하시면 기본 근무시간이 자동 세팅됩니다.</p>
+        </div>
+
+        <!-- 2. 근무일자 (시인성 극대화 화이트 카드) -->
+        <div class="bg-white border-2 border-slate-300 rounded-2xl p-4 shadow-sm space-y-1.5">
+          <label class="block text-xs font-black text-slate-800 flex items-center gap-1.5">
+            <i data-lucide="calendar" class="w-4 h-4 text-emerald-600"></i>
+            <span>근무일자 (출근 날짜) <span class="text-rose-500">*</span></span>
+          </label>
+          <div class="relative">
+            <input type="date" id="wWorkDate" required class="mobile-input w-full px-4 py-3.5 rounded-xl text-base font-black text-slate-900 shadow-sm outline-none cursor-pointer bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 focus:bg-white">
+          </div>
+        </div>
+
+        <!-- 3. 성명 & 연락처 -->
+        <div class="bg-white border-2 border-slate-300 rounded-2xl p-4 shadow-sm space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-black text-slate-800 mb-1.5 flex items-center gap-1.5">
+                <i data-lucide="user" class="w-4 h-4 text-indigo-600"></i>
+                <span>근무자 성명 <span class="text-rose-500">*</span></span>
+              </label>
+              <input type="text" id="wWorkerName" required placeholder="성명 입력" class="mobile-input w-full px-3.5 py-3 rounded-xl text-base font-black text-slate-900 shadow-sm outline-none bg-slate-50 border-2 border-slate-300 focus:border-indigo-600 focus:bg-white">
+            </div>
+            <div>
+              <label class="block text-xs font-black text-slate-800 mb-1.5 flex items-center gap-1.5">
+                <i data-lucide="phone" class="w-4 h-4 text-slate-500"></i>
+                <span>연락처</span>
+              </label>
+              <input type="tel" id="wContact" placeholder="010-0000-0000" class="mobile-input w-full px-3.5 py-3 rounded-xl text-sm font-bold text-slate-800 shadow-sm outline-none bg-slate-50 border-2 border-slate-300 focus:border-indigo-600 focus:bg-white">
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. 근무시간 & 휴게시간 설정 (시인성 극대화 화이트 카드) -->
+        <div class="bg-white border-2 border-slate-300 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3.5">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <span class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="clock" class="w-4 h-4 text-emerald-600"></i>
+              근무 시간 및 휴게시간 관리
+            </span>
+            <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">터치하여 변경 가능</span>
+          </div>
+
+          <!-- 시작 & 종료 시간 2열 와이드 배치 -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-center">
+              <span class="block text-xs font-black text-slate-600 mb-1 flex items-center justify-center gap-1">
+                <i data-lucide="arrow-right-circle" class="w-3.5 h-3.5 text-blue-600"></i> 시작시간
+              </span>
+              <input type="time" id="wStartTime" value="07:30" onchange="calcWorkerHours()" class="mobile-input w-full rounded-lg py-2.5 px-2 text-base font-black text-slate-900 text-center outline-none bg-white border border-slate-300 shadow-xs">
+            </div>
+            <div class="bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-center">
+              <span class="block text-xs font-black text-slate-600 mb-1 flex items-center justify-center gap-1">
+                <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i> 종료시간
+              </span>
+              <input type="time" id="wEndTime" value="15:30" onchange="calcWorkerHours()" class="mobile-input w-full rounded-lg py-2.5 px-2 text-base font-black text-slate-900 text-center outline-none bg-white border border-slate-300 shadow-xs">
+            </div>
+          </div>
+
+          <!-- 휴게시간 설정 행 -->
+          <div class="bg-slate-50 border-2 border-slate-200 rounded-xl p-3 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="coffee" class="w-4 h-4 text-amber-600"></i>
+              <span class="text-xs font-black text-slate-700">휴게시간 공제</span>
+            </div>
+            <select id="wBreakHours" onchange="calcWorkerHours()" class="mobile-input rounded-xl py-2 px-3 text-xs font-black text-slate-900 outline-none cursor-pointer bg-white border-2 border-slate-300">
+              <option value="0">0시간 (미공제)</option>
+              <option value="0.5">30분 공제 (0.5h)</option>
+              <option value="1" selected>1시간 공제 (1.0h)</option>
+              <option value="1.5">1.5시간 공제 (1.5h)</option>
+              <option value="2">2시간 공제 (2.0h)</option>
+            </select>
+          </div>
+
+          <!-- 인정 근무시간 하이라이트 배너 -->
+          <div class="p-3.5 rounded-xl bg-emerald-50 border-2 border-emerald-300 flex items-center justify-between text-xs">
+            <span class="text-emerald-900 font-black flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-4 h-4 text-emerald-600"></i>
+              인정 근무시간:
+            </span>
+            <strong id="wCalcHours" class="text-emerald-800 font-black text-lg sm:text-xl">7시간</strong>
+          </div>
+        </div>
+
+        <!-- 본인 전자서명 패드 -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-xs font-bold text-slate-700">본인 전자서명 (필수) <span class="text-rose-500">*</span></label>
+            <button type="button" onclick="clearWorkerCanvas()" class="text-[11px] text-slate-500 underline font-semibold">지우기</button>
+          </div>
+          <div class="p-1.5 rounded-2xl bg-white border-2 border-slate-300 shadow-sm">
+            <canvas id="workerSignCanvas" width="340" height="130" class="w-full h-[130px] rounded-xl cursor-crosshair touch-none bg-white"></canvas>
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1">네모 박스 안에 정자 또는 자필 서명을 입력하세요.</p>
+        </div>
+
+        <button type="submit" id="workerSubmitBtn" class="neu-button-primary w-full py-3.5 rounded-xl text-sm font-bold shadow-lg flex items-center justify-center gap-2">
+          <i data-lucide="check" class="w-4 h-4"></i> 근무 확인서 제출 및 서명 완료
+        </button>
+      </form>
+    </div>
+
+    <!-- 2. 제출 완료 영수증 카드 (관리자 버튼 완전 배제, [종료] 버튼 탑재) -->
+    <div id="workerSuccessCard" class="hidden neu-card p-6 sm:p-7 bg-[#EEF1F8] text-center space-y-4">
+      <div class="w-16 h-16 mx-auto rounded-full neu-inset-bar flex items-center justify-center text-emerald-600">
+        <i data-lucide="check" class="w-9 h-9 stroke-[3]"></i>
+      </div>
+      <div>
+        <h3 class="text-xl font-black text-slate-800">출근 서명이 완료되었습니다!</h3>
+        <p class="text-xs text-slate-500 mt-1">출근부에 즉시 등록되어 확인 대기 상태로 전달되었습니다.</p>
+      </div>
+
+      <!-- 영수증 요약 (산출 급여 비노출!) -->
+      <div class="neu-inset-bar p-4 rounded-2xl text-left text-xs text-slate-700 space-y-2 bg-[#EEF1F8]">
+        <div class="flex justify-between"><span class="text-slate-500">근무자:</span><strong id="rcptName">-</strong></div>
+        <div class="flex justify-between"><span class="text-slate-500">활동직종:</span><span id="rcptType" class="font-semibold">-</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">근무일자:</span><span id="rcptDate" class="font-semibold">-</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">근무시간:</span><span id="rcptTime" class="font-mono text-slate-800">-</span></div>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="handleExitApp()" class="neu-button-primary w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow">
+          <i data-lucide="power" class="w-4 h-4 text-white"></i> 종료 (화면 닫기)
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. 화면 종료 안내 (창 닫기 차단된 브라우저 대응) -->
+    <div id="workerClosedCard" class="hidden neu-card p-6 bg-[#EEF1F8] text-center space-y-4">
+      <div class="w-16 h-16 mx-auto rounded-full neu-inset-bar flex items-center justify-center text-slate-600">
+        <i data-lucide="power" class="w-8 h-8 text-rose-600"></i>
+      </div>
+      <h3 class="text-lg font-black text-slate-800">출근 서명이 완료되었습니다</h3>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        스마트폰 화면 상단의 <strong>[뒤로가기]</strong> 또는 브라우저의 <strong>[× 닫기]</strong> 버튼을 눌러 화면을 완전히 닫아주세요.
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       [관리자 전용] 메인 대시보드 컨테이너
+       ========================================== -->
+  <div id="adminContainer" class="max-w-7xl mx-auto">
+    <!-- 1. [장식] 상단 카드 -->
+    <div class="neu-card-top p-6 sm:p-7 mb-5 no-print">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-2">
+        <div>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-700 tracking-tight leading-none">
+            스쿨사인 365
+          </h1>
+          <h2 class="text-base sm:text-lg lg:text-xl font-bold text-slate-500 mt-2 tracking-tight">
+            스마트 학교 출근부 & K-에듀파인 지출품의 연동
+          </h2>
+        </div>
+
+        <!-- 개발자 문구 및 저작권 (단추 형식 제거, 작고 흐린 색 텍스트만 깔끔하게 노출) -->
+        <div class="text-right flex-shrink-0 self-end pb-0.5">
+          <div class="text-right leading-tight select-none">
+            <span class="block text-[11px] font-normal text-slate-400 tracking-tight">
+              Developed by 신경수(담양남초)
+            </span>
+            <span class="block text-[10px] font-normal text-slate-400/70 mt-0.5 tracking-tight">
+              © 2026. All Rights Reserved.
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. [메인] 출근부 대장 카드 -->
+    <div class="neu-card rounded-3xl p-5 sm:p-7 bg-[#EEF1F8] no-print">
+      <!-- 헤더 타이틀 -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">관리자 모드</span>
+          </div>
+          <h3 class="text-xl sm:text-2xl font-black text-slate-800">
+            근무·활동 출근부 대장
+          </h3>
+        </div>
+      </div>
+
+      <!-- 검색 & 필터 바 -->
+      <div class="neu-card p-4 rounded-2xl mb-4 bg-[#EEF1F8]">
+        <div class="flex flex-wrap items-center gap-2.5 text-xs">
+          <!-- 직종 선택 -->
+          <div class="flex items-center gap-1.5">
+            <span class="font-bold text-slate-600">인력 유형</span>
+            <select id="filterWorkerType" onchange="applyFilters()" class="neu-inset-box px-3 py-1.5 rounded-xl font-bold text-slate-700 outline-none cursor-pointer">
+              <option value="ALL">전체 직종</option>
+            </select>
+          </div>
+
+          <!-- 기간 토글 버튼 -->
+          <div class="flex items-center gap-1">
+            <span class="font-bold text-slate-600 ml-1">기간</span>
+            <div class="flex items-center gap-1">
+              <button id="btnPeriodAll" onclick="setPeriod('all')" class="neu-inset-box px-2.5 py-1.5 rounded-xl font-bold text-emerald-700">전체</button>
+              <button id="btnPeriodThis" onclick="setPeriod('thisMonth')" class="neu-button px-2.5 py-1.5 rounded-xl font-bold text-slate-600">이번 달</button>
+              <button id="btnPeriodLast" onclick="setPeriod('lastMonth')" class="neu-button px-2.5 py-1.5 rounded-xl font-bold text-slate-600">지난달</button>
+            </div>
+          </div>
+
+          <!-- 날짜 범위 -->
+          <div class="flex items-center gap-1">
+            <input type="date" id="filterStartDate" onchange="applyFilters()" class="neu-inset-box px-2.5 py-1.5 rounded-xl text-slate-700 outline-none text-xs font-semibold">
+            <span class="text-slate-400">~</span>
+            <input type="date" id="filterEndDate" onchange="applyFilters()" class="neu-inset-box px-2.5 py-1.5 rounded-xl text-slate-700 outline-none text-xs font-semibold">
+          </div>
+
+          <!-- 성명 검색 -->
+          <div class="flex items-center gap-1.5 flex-1 min-w-[150px]">
+            <span class="font-bold text-slate-600">성명</span>
+            <input type="text" id="filterName" placeholder="이름 검색" onkeyup="if(event.key==='Enter') applyFilters()" class="neu-inset-box flex-1 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-800 outline-none">
+          </div>
+
+          <!-- 검색 & 초기화 버튼 -->
+          <button onclick="applyFilters()" class="neu-button-primary px-3.5 py-1.5 rounded-xl font-bold flex items-center gap-1">
+            <i data-lucide="search" class="w-3.5 h-3.5"></i> 검색
+          </button>
+          <button onclick="resetFilters()" class="neu-button px-3 py-1.5 rounded-xl font-bold text-slate-600 flex items-center gap-1">
+            <i data-lucide="rotate-ccw" class="w-3 h-3"></i> 초기화
+          </button>
+        </div>
+      </div>
+
+      <!-- 대장 헤더 (결과 카운트 + 액션 버튼) -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+        <div class="text-xs font-black text-slate-700 flex items-center gap-1.5">
+          <span>조회 결과 <span id="recordCount" class="text-emerald-700 text-sm font-extrabold">0건</span></span>
+          <span id="selectedCountBadge" class="hidden ml-2 text-xs font-semibold text-blue-700 bg-blue-100/60 px-2.5 py-0.5 rounded-full"></span>
+          <button id="btnSyncRecords" onclick="syncRecordsFromSheet()" class="neu-button px-2.5 py-1 rounded-xl text-xs font-bold text-blue-700 flex items-center gap-1 ml-1" title="구글 시트의 최신 제출 기록 동기화">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-blue-600"></i> 새로고침
+          </button>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="openAddModal()" class="neu-button-primary px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow">
+            <i data-lucide="plus" class="w-4 h-4"></i> 누락 기록 추가
+          </button>
+          <button onclick="openBatchSignModal()" class="neu-button px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 flex items-center gap-1.5">
+            <i data-lucide="pen-line" class="w-3.5 h-3.5 text-blue-600"></i> 기간 일괄 서명
+          </button>
+          <button id="btnBatchDelete" onclick="batchDeleteSelectedRecords()" class="hidden neu-button px-3.5 py-2 rounded-xl text-xs font-bold text-rose-600 flex items-center gap-1.5 hover:bg-rose-50 border border-rose-300">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-600"></i>
+            <span>선택 일괄 삭제 (<span id="batchDeleteCount">0</span>)</span>
+          </button>
+          <button onclick="exportToExcel()" class="neu-button px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 flex items-center gap-1.5">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-600"></i> 엑셀 저장
+          </button>
+          <button onclick="exportToPdf()" class="neu-button px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 flex items-center gap-1.5">
+            <i data-lucide="file-text" class="w-3.5 h-3.5 text-rose-600"></i> PDF 저장
+          </button>
+          <button onclick="printA4Register()" class="neu-button px-3.5 py-2 rounded-xl text-xs font-bold text-slate-700 flex items-center gap-1.5">
+            <i data-lucide="printer" class="w-3.5 h-3.5 text-slate-600"></i> 인쇄
+          </button>
+        </div>
+      </div>
+
+      <!-- 근무기록 테이블 (확인서 열 완전 삭제, 수기서명/확인대기 뱃지 완벽 지원) -->
+      <div class="neu-inset-bar p-2 rounded-2xl overflow-x-auto bg-[#EEF1F8]">
+        <table class="w-full text-xs text-left text-slate-700 border-collapse">
+          <thead class="text-[11px] font-bold text-slate-500 border-b border-slate-300">
+            <tr>
+              <th class="py-3 px-3 text-center w-10">
+                <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this.checked)" class="rounded cursor-pointer">
+              </th>
+              <th class="py-3 px-2 text-center w-12">순번</th>
+              <th class="py-3 px-3 w-28 whitespace-nowrap min-w-[95px]">근무일자</th>
+              <th class="py-3 px-3 w-36">인력 유형</th>
+              <th class="py-3 px-3 w-28 whitespace-nowrap">성명</th>
+              <th class="py-3 px-3 text-center w-40">근무시간 (인정)</th>
+              <th class="py-3 px-3 text-center w-36">근무자 서명</th>
+              <th class="py-3 px-3 text-center w-36">확인자 서명</th>
+              <th class="py-3 px-3 text-center w-16">관리</th>
+            </tr>
+          </thead>
+          <tbody id="recordTableBody" class="divide-y divide-slate-300/40">
+          </tbody>
+        </table>
+        <!-- 페이지네이션 컨트롤러 (React 앱과 100% 동일) -->
+        <div class="flex items-center justify-between pt-4 px-1 text-xs text-slate-500 font-bold">
+          <div>
+            총 <span class="font-extrabold text-slate-700" id="totalRecordsCount">0</span>개의 기록 중 <span class="font-extrabold text-slate-700" id="pageRangeText">0 - 0</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button
+              id="btnPrevPage"
+              onclick="changePage(-1)"
+              disabled
+              class="neu-button px-3 py-1.5 rounded-xl font-bold flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed text-slate-600 hover:text-slate-800 transition-all"
+            >
+              <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
+              이전
+            </button>
+
+            <span class="px-3 py-1 rounded-xl neu-inset-bar font-extrabold text-slate-700 text-xs" id="pageIndicator">
+              1 / 1
+            </span>
+
+            <button
+              id="btnNextPage"
+              onclick="changePage(1)"
+              disabled
+              class="neu-button px-3 py-1.5 rounded-xl font-bold flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed text-slate-600 hover:text-slate-800 transition-all"
+            >
+              다음
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. [하단 네비게이션 바] (React 앱과 100% 동일 스타일 & 아이콘) -->
+    <div class="fixed bottom-0 left-0 right-0 z-40 p-3 sm:p-4 pointer-events-none no-print">
+      <div class="max-w-4xl mx-auto flex items-center justify-center pointer-events-auto">
+        <div class="neu-bottom-bar px-3 sm:px-4 py-2 flex items-center gap-1.5 sm:gap-2 shadow-2xl bg-[#EEF1F8]/95 backdrop-blur-md overflow-x-auto max-w-full rounded-2xl border border-white/60">
+          <button onclick="changeTab('records')" id="navRecords" class="px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex items-center gap-1.5 neu-inset-bar text-slate-800 bg-[#dbe0e7]">
+            <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-600"></i>
+            근무기록 대장
+          </button>
+          <button onclick="changeTab('edufine')" id="navEdufine" class="px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex items-center gap-1.5 neu-button text-emerald-700 hover:text-emerald-900">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            에듀파인 품의서
+          </button>
+          <button onclick="changeTab('workerTypes')" id="navWorkerTypes" class="px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex items-center gap-1.5 neu-button text-slate-600 hover:text-slate-800">
+            <i data-lucide="users" class="w-3.5 h-3.5 text-indigo-600"></i>
+            인력유형·단가
+          </button>
+          <button onclick="changeTab('qr')" id="navQr" class="px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex items-center gap-1.5 neu-button text-slate-600 hover:text-slate-800">
+            <i data-lucide="qr-code" class="w-3.5 h-3.5 text-amber-600"></i>
+            비치용 QR
+          </button>
+          <button onclick="changeTab('gas')" id="navGas" class="px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex items-center gap-1.5 neu-button text-slate-600 hover:text-slate-800">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-teal-600"></i>
+            Apps Script
+          </button>
+          <button onclick="changeTab('settings')" id="navSettings" class="px-3 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex items-center gap-1.5 neu-button text-slate-600 hover:text-slate-800" title="학교 및 직인 설정">
+            <i data-lucide="settings" class="w-3.5 h-3.5 text-slate-600"></i>
+            설정
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       [모달 1] 누가 기록 수기 추가
+       ========================================== -->
+  <div id="addModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
+    <div class="neu-card rounded-2xl max-w-lg w-full bg-[#EEF1F8] p-6 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-white/60 mb-4">
+        <div>
+          <h3 class="text-lg font-black text-slate-800">누가 기록 수기 추가</h3>
+          <p class="text-xs text-slate-500">소급 등록 또는 수기 관리가 필요한 경우 담당자가 직접 등록합니다.</p>
+        </div>
+        <button onclick="closeModal('addModal')" class="neu-circle-btn w-8 h-8 text-slate-500">✕</button>
+      </div>
+
+      <form onsubmit="handleSaveRecord(event)" class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">근무일자 *</label>
+            <input type="date" id="modalWorkDate" required class="neu-inset-box w-full px-3 py-2 rounded-xl text-xs font-bold text-slate-800 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">인력 유형 *</label>
+            <select id="modalWorkerType" onchange="onModalTypeChange()" class="neu-inset-box w-full px-3 py-2 rounded-xl text-xs font-bold text-slate-800 outline-none">
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">근무자 성명 *</label>
+          <input type="text" id="modalWorkerName" required placeholder="예: 김영희" class="neu-inset-box w-full px-3 py-2 rounded-xl text-xs font-bold text-slate-800 outline-none">
+        </div>
+
+        <div class="neu-inset-bar p-3.5 rounded-2xl bg-[#EEF1F8]">
+          <span class="block text-xs font-bold text-slate-600 mb-2">근무시간 설정 및 인정시간 자동산출</span>
+          <div class="grid grid-cols-3 gap-2.5">
+            <div>
+              <span class="block text-[11px] text-slate-500 mb-1">시작시간</span>
+              <input type="time" id="modalStartTime" required value="07:30" onchange="calculateModalHours()" class="neu-inset-box w-full px-2 py-1.5 rounded-lg text-xs font-bold text-slate-700 outline-none">
+            </div>
+            <div>
+              <span class="block text-[11px] text-slate-500 mb-1">종료시간</span>
+              <input type="time" id="modalEndTime" required value="15:30" onchange="calculateModalHours()" class="neu-inset-box w-full px-2 py-1.5 rounded-lg text-xs font-bold text-slate-700 outline-none">
+            </div>
+            <div>
+              <span class="block text-[11px] text-slate-500 mb-1">휴게시간</span>
+              <select id="modalBreakHours" onchange="calculateModalHours()" class="neu-inset-box w-full px-2 py-1.5 rounded-lg text-xs font-bold text-slate-700 outline-none">
+                <option value="0">0시간</option>
+                <option value="0.5">30분 (0.5h)</option>
+                <option value="1" selected>1시간 (1h)</option>
+                <option value="1.5">1.5시간</option>
+              </select>
+            </div>
+          </div>
+          <div class="mt-2.5 pt-2 border-t border-slate-300 flex items-center justify-between text-xs">
+            <span class="text-slate-600 font-medium">인정 근무시간: <strong id="modalCalcHours" class="text-slate-800 text-sm">7시간</strong></span>
+            <span class="text-slate-600 font-medium">산출 일당: <strong id="modalCalcPay" class="text-emerald-700 text-sm">78,400원</strong></span>
+          </div>
+        </div>
+
+        <!-- ✍️ 근무자 서명 안내 (출근부 인쇄본 자필 수기 서명) -->
+        <div class="neu-inset-bar p-4 rounded-2xl bg-[#EEF1F8] border-l-4 border-blue-600 space-y-1">
+          <div class="text-xs font-extrabold text-blue-900">✍️ 근무자 서명 안내 (출근부 인쇄본 자필 수기 서명)</div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            수기 추가 건은 화면 내 별도의 전자서명이 필요하지 않습니다. 등록 후 <strong>[출근대장 A4 인쇄 / PDF 저장]</strong>으로 출력하시어, 해당 서명란에 <strong>근무자가 직접 자필로 수기 서명(날인)</strong>할 수 있도록 안내해 주시기 바랍니다.
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">비고 (결원 사유 및 업무내용)</label>
+          <input type="text" id="modalNotes" placeholder="예: 조리실무사 병가 대체" class="neu-inset-box w-full px-3 py-2 rounded-xl text-xs text-slate-700 outline-none">
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-white/60">
+          <button type="button" onclick="closeModal('addModal')" class="neu-button px-4 py-2 rounded-xl text-xs font-bold text-slate-600">취소</button>
+          <button type="submit" class="neu-button-primary px-5 py-2 rounded-xl text-xs font-bold shadow">근무기록 저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       [모달 2] 기간 일괄 확인 서명 (직접 서명 전용 패드)
+       ========================================== -->
+  <div id="batchSignModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
+    <div class="neu-card rounded-2xl max-w-md w-full bg-[#EEF1F8] p-6">
+      <div class="flex items-center justify-between pb-3 border-b border-white/60 mb-4">
+        <div>
+          <h3 class="text-base font-black text-slate-800">기간 일괄 확인 서명</h3>
+          <p class="text-xs text-slate-500">담당 확인자 직접 서명 날인</p>
+        </div>
+        <button onclick="closeModal('batchSignModal')" class="neu-circle-btn w-8 h-8 text-slate-500">✕</button>
+      </div>
+
+      <div class="neu-inset-bar p-3 rounded-xl text-xs text-slate-600 mb-4">
+        <span class="font-bold text-slate-800">날인 대상: </span>
+        <span id="batchCountBadge" class="text-blue-700 font-extrabold">0건</span>의 근무기록에 확인자 직접 서명을 일괄 반영합니다.
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-xs font-bold text-slate-600 mb-1">확인자 직급 및 성명 *</label>
+        <input type="text" id="batchVerifierName" value="박실장 (실장)" class="neu-inset-box w-full px-3 py-2 rounded-xl text-xs font-bold text-slate-800 outline-none">
+      </div>
+
+      <!-- 직접 서명 캔버스 패드 -->
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-1.5">
+          <label class="text-xs font-bold text-slate-700">확인자 직접 전자서명 *</label>
+          <button type="button" onclick="clearVerifierCanvas()" class="text-[11px] text-slate-500 underline">지우기</button>
+        </div>
+        <div class="neu-inset-bar p-1.5 rounded-xl bg-white">
+          <canvas id="verifierSignCanvas" width="380" height="130" class="w-full h-[130px] rounded-lg cursor-crosshair touch-none"></canvas>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-1">마우스나 터치펜으로 직접 서명해 주세요.</p>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-3 border-t border-white/60">
+        <button onclick="closeModal('batchSignModal')" class="neu-button px-4 py-2 rounded-xl text-xs font-bold text-slate-600">취소</button>
+        <button onclick="executeBatchSign()" class="neu-button-primary px-5 py-2 rounded-xl text-xs font-bold shadow">일괄 서명 완료</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       [모달 3] K-에듀파인 지출품의 연계 요약표 (전체 기능 일치)
+       ========================================== -->
+  <div id="edufineModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
+    <div class="neu-card rounded-2xl max-w-4xl w-full bg-[#EEF1F8] p-6 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-white/60 mb-4">
+        <div>
+          <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold text-emerald-700 neu-inset-bar mb-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            K-에듀파인 품의 연계
+          </span>
+          <h3 class="text-lg sm:text-xl font-black text-slate-800">단기·대체인력 지출품의 요약서</h3>
+        </div>
+        <button onclick="closeModal('edufineModal')" class="neu-circle-btn w-8 h-8 text-slate-500">✕</button>
+      </div>
+
+      <!-- 월 선택 & 직종 필터 -->
+      <div class="flex flex-wrap items-center gap-3 p-3 neu-inset-bar rounded-xl mb-4 text-xs font-bold">
+        <div class="flex items-center gap-1.5">
+          <span>대상 월:</span>
+          <input type="month" id="edufineMonth" value="2026-09" onchange="renderEdufineModal()" class="neu-inset-box px-2.5 py-1.5 rounded-lg text-slate-800 outline-none">
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span>직종 구분:</span>
+          <select id="edufineTypeFilter" onchange="renderEdufineModal()" class="neu-inset-box px-2.5 py-1.5 rounded-lg text-slate-800 outline-none">
+            <option value="전체">전체 직종</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 3대 요약 통계 카드 -->
+      <div class="grid grid-cols-3 gap-3 mb-4 text-center">
+        <div class="neu-inset-bar p-3 rounded-xl">
+          <p class="text-[11px] font-bold text-slate-500">지급 대상자</p>
+          <p id="efTotalWorkers" class="text-base font-black text-slate-800 mt-0.5">0명</p>
+        </div>
+        <div class="neu-inset-bar p-3 rounded-xl">
+          <p class="text-[11px] font-bold text-slate-500">총 인정시간</p>
+          <p id="efTotalHours" class="text-base font-black text-slate-800 mt-0.5">0시간</p>
+        </div>
+        <div class="neu-inset-bar p-3 rounded-xl">
+          <p class="text-[11px] font-bold text-slate-500">품의 소요예산(지급총액)</p>
+          <p id="efTotalGross" class="text-base font-black text-emerald-700 mt-0.5">0원</p>
+        </div>
+      </div>
+
+      <!-- 세부 지급내역 테이블 -->
+      <div class="neu-inset-bar p-2 rounded-2xl mb-4 overflow-x-auto">
+        <table class="w-full text-xs text-left text-slate-700">
+          <thead class="border-b border-slate-300 font-bold text-slate-500">
+            <tr>
+              <th class="py-2 px-2 text-center w-10">순번</th>
+              <th class="py-2 px-2">직종</th>
+              <th class="py-2 px-2">성명</th>
+              <th class="py-2 px-2 text-center">근무일수</th>
+              <th class="py-2 px-2 text-center">인정시간</th>
+              <th class="py-2 px-2 text-right">지급총액</th>
+              <th class="py-2 px-2 text-right">고용보험(0.9%)</th>
+              <th class="py-2 px-2 text-right">실지급액</th>
+            </tr>
+          </thead>
+          <tbody id="edufineTableBody" class="divide-y divide-slate-300/40">
+          </tbody>
+        </table>
+      </div>
+
+      <!-- K-에듀파인 품의문구 복사용 텍스트에어리어 -->
+      <div>
+        <div class="flex items-center justify-between mb-1.5">
+          <label class="text-xs font-bold text-slate-700">K-에듀파인 지출품의서 개요 복사용 문구</label>
+          <button onclick="copyEdufineText()" class="neu-button px-3 py-1 rounded-lg text-xs font-bold text-emerald-800 flex items-center gap-1 shadow-sm">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i> 문구 복사
+          </button>
+        </div>
+        <textarea id="edufineCopyArea" rows="7" readonly class="neu-inset-box w-full p-3 rounded-xl text-xs font-mono text-slate-800 outline-none leading-relaxed"></textarea>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       [모달 4] 인력유형·기준단가 관리
+       ========================================== -->
+  <div id="workerTypeModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
+    <div class="neu-card rounded-2xl max-w-4xl w-full bg-[#EEF1F8] p-6 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-white/60 mb-4">
+        <div>
+          <h3 class="text-lg font-black text-slate-800">인력유형 및 기준단가 설정</h3>
+          <p class="text-xs text-slate-500">학교별 직종, 기본 근무시간, 시급 및 일당 기준을 관리합니다.</p>
+        </div>
+        <button onclick="closeModal('workerTypeModal')" class="neu-circle-btn w-8 h-8 text-slate-500">✕</button>
+      </div>
+
+      <!-- 신규 직종 추가 버튼 / 폼 영역 -->
+      <div class="mb-4">
+        <button id="btnShowAddTypeForm" onclick="toggleAddTypeForm()" class="neu-button-primary px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow">
+          <i data-lucide="plus" class="w-4 h-4"></i> 신규 직종 추가
+        </button>
+
+        <div id="typeFormCard" class="hidden neu-inset-bar p-4 rounded-2xl mt-3 bg-[#EEF1F8]">
+          <h4 id="typeFormTitle" class="text-xs font-black text-slate-800 mb-3">신규 인력유형 등록</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs mb-3">
+            <div>
+              <span class="block font-bold text-slate-600 mb-1">직종명 *</span>
+              <input type="text" id="tfName" placeholder="예: 방과후강사 대체" class="neu-inset-box w-full px-2.5 py-1.5 rounded-lg font-bold text-slate-800 outline-none">
+            </div>
+            <div>
+              <span class="block font-bold text-slate-600 mb-1">시간당 시급(원) *</span>
+              <input type="number" id="tfHourly" value="11200" oninput="calcTypeDailyWage()" class="neu-inset-box w-full px-2.5 py-1.5 rounded-lg font-bold text-slate-800 outline-none">
+            </div>
+            <div>
+              <span class="block font-bold text-slate-600 mb-1">일당 기준(원) *</span>
+              <input type="number" id="tfDaily" value="78400" class="neu-inset-box w-full px-2.5 py-1.5 rounded-lg font-bold text-emerald-700 outline-none">
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs mb-3">
+            <div>
+              <span class="block font-bold text-slate-600 mb-1">기본 시작시간</span>
+              <input type="time" id="tfStart" value="08:30" onchange="calcTypeDailyWage()" class="neu-inset-box w-full px-2.5 py-1.5 rounded-lg text-slate-800 outline-none">
+            </div>
+            <div>
+              <span class="block font-bold text-slate-600 mb-1">기본 종료시간</span>
+              <input type="time" id="tfEnd" value="16:30" onchange="calcTypeDailyWage()" class="neu-inset-box w-full px-2.5 py-1.5 rounded-lg text-slate-800 outline-none">
+            </div>
+            <div>
+              <span class="block font-bold text-slate-600 mb-1">기본 휴게시간(h)</span>
+              <input type="number" step="0.5" id="tfBreak" value="1" oninput="calcTypeDailyWage()" class="neu-inset-box w-full px-2.5 py-1.5 rounded-lg text-slate-800 outline-none">
+            </div>
+          </div>
+          <div class="flex items-center justify-end gap-2">
+            <button onclick="toggleAddTypeForm(false)" class="neu-button px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600">취소</button>
+            <button onclick="saveWorkerTypeFromForm()" class="neu-button-primary px-4 py-1.5 rounded-xl text-xs font-bold shadow">저장</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 직종 목록 테이블 -->
+      <div class="neu-inset-bar p-2 rounded-2xl overflow-x-auto">
+        <table class="w-full text-xs text-left text-slate-700">
+          <thead class="border-b border-slate-300 font-bold text-slate-500">
+            <tr>
+              <th class="py-2.5 px-3">직종명</th>
+              <th class="py-2.5 px-2 text-center">기본시간</th>
+              <th class="py-2.5 px-2 text-center">휴게</th>
+              <th class="py-2.5 px-3 text-right">시급</th>
+              <th class="py-2.5 px-3 text-right">일당</th>
+              <th class="py-2.5 px-2 text-center">관리</th>
+            </tr>
+          </thead>
+          <tbody id="workerTypeTableBody" class="divide-y divide-slate-300/40">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       [모달 5] 비치용 QR 출근 안내판 (A4 포스터)
+       ========================================== -->
+  <div id="qrModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
+    <div class="neu-card rounded-2xl max-w-xl w-full bg-[#EEF1F8] p-6 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-white/60 mb-4">
+        <div>
+          <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold text-slate-600 neu-inset-bar mb-1">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+            스쿨사인 365 · A4 출근 안내판
+          </span>
+          <h3 class="text-base font-black text-slate-800">비치용 QR 출근 안내 포스터</h3>
+        </div>
+        <button onclick="closeModal('qrModal')" class="neu-circle-btn w-8 h-8 text-slate-500">✕</button>
+      </div>
+
+      <!-- 웹 앱 정식 배포 URL 안내 및 설정 바 -->
+      <div class="neu-inset-bar p-3.5 rounded-2xl mb-4 bg-[#EEF1F8] text-left text-xs">
+        <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+          <span>📌 스마트폰 접속용 웹 앱 배포 URL</span>
+        </label>
+        <div class="flex gap-2 mb-1">
+          <input type="url" id="customGasUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="neu-inset-box flex-1 px-3 py-1.5 rounded-xl font-mono text-[11px] text-slate-800 outline-none">
+          <button onclick="saveCustomGasUrl()" class="neu-button-primary px-3.5 py-1.5 rounded-xl text-xs font-bold shadow whitespace-nowrap">URL 저장</button>
+        </div>
+        <p id="urlWarningNotice" class="hidden text-[11px] text-rose-600 font-bold mt-1 leading-tight">
+          ⚠️ 구글 내부 임시 프레임(userCodeAppPanel) 주소가 감지되었습니다. 스마트폰 QR 스캔 시 빈 화면을 방지하기 위해 구글 Apps Script 상단 배포 URL('https://script.google.com/macros/s/.../exec')을 위 칸에 넣고 [URL 저장]을 눌러주세요!
+        </p>
+      </div>
+
+      <!-- 액션 버튼군 -->
+      <div class="flex items-center gap-2 mb-4">
+        <button onclick="printQrPoster()" class="neu-button-primary flex-1 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow">
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i> A4 포스터 인쇄
+        </button>
+        <button onclick="copyCurrentWebUrl()" class="neu-button px-4 py-2 rounded-xl text-xs font-bold text-slate-700 flex items-center gap-1.5">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i> 링크 복사
+        </button>
+      </div>
+
+      <!-- A4 포스터 프리뷰 (행정실/전남교육청 문구 전면 배제!) -->
+      <div class="bg-white rounded-2xl border-4 border-teal-800 p-8 shadow-md text-center mx-auto">
+        <div class="flex items-center justify-center gap-1.5 text-teal-800 font-extrabold text-xs mb-2">
+          <i data-lucide="building-2" class="w-4 h-4"></i>
+          <span id="qrPosterSchoolName">행복초등학교</span>
+        </div>
+        <h2 class="text-2xl font-black text-slate-900 tracking-tight">스쿨사인 365</h2>
+        <p class="text-sm font-bold text-slate-700 mt-1">단기·대체인력 근무확인서 모바일 전자서명</p>
+        <p class="text-xs font-semibold text-teal-700 mb-5">스마트폰 카메라로 QR코드를 스캔하여 서명해 주세요</p>
+
+        <!-- QR 코드 박스 -->
+        <div class="inline-block p-4 bg-white border-2 border-slate-300 rounded-2xl shadow-sm mb-6">
+          <img id="qrImageTag" src="" alt="QR" class="w-48 h-48 mx-auto object-contain">
+        </div>
+
+        <!-- 3단계 이용안내 -->
+        <div class="grid grid-cols-3 gap-2.5 text-center mb-6">
+          <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+            <span class="w-5 h-5 rounded-full bg-teal-800 text-white font-bold text-[10px] inline-flex items-center justify-center mb-1">1</span>
+            <p class="text-[11px] font-bold text-slate-800">QR 스캔</p>
+            <p class="text-[9px] text-slate-400 mt-0.5">기본 카메라로 비추기</p>
+          </div>
+          <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+            <span class="w-5 h-5 rounded-full bg-teal-800 text-white font-bold text-[10px] inline-flex items-center justify-center mb-1">2</span>
+            <p class="text-[11px] font-bold text-slate-800">시간/성명 입력</p>
+            <p class="text-[9px] text-slate-400 mt-0.5">출퇴근 시간 확인</p>
+          </div>
+          <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+            <span class="w-5 h-5 rounded-full bg-teal-800 text-white font-bold text-[10px] inline-flex items-center justify-center mb-1">3</span>
+            <p class="text-[11px] font-bold text-slate-800">본인 서명 제출</p>
+            <p class="text-[9px] text-slate-400 mt-0.5">전자서명 후 완료</p>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 text-slate-500 text-xs">
+          문의처: <span id="qrPosterSchoolFooter">행복초등학교</span> (<span id="qrPosterContact">061-260-1234</span>)
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       [모달 6] 시스템 설정 & 결재라인 편집 (전결·대결)
+       ========================================== -->
+  <div id="settingsModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
+    <div class="neu-card rounded-2xl max-w-xl w-full bg-[#EEF1F8] p-6 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-white/60 mb-4">
+        <div>
+          <h3 class="text-base font-black text-slate-800">학교 정보 및 결재라인 관리</h3>
+          <p class="text-xs text-slate-500">대장 인쇄 결재란 및 학교 설정을 관리합니다.</p>
+        </div>
+        <button onclick="closeModal('settingsModal')" class="neu-circle-btn w-8 h-8 text-slate-500">✕</button>
+      </div>
+
+      <!-- 기본 학교 정보 -->
+      <div class="space-y-3 text-xs mb-5">
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">학교명 *</label>
+          <input type="text" id="settingSchoolName" value="행복초등학교" class="neu-inset-box w-full px-3 py-2 rounded-xl font-bold text-slate-800 outline-none">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-600 mb-1">대표 연락처 (문의처)</label>
+          <input type="text" id="settingContact" value="061-260-1234" class="neu-inset-box w-full px-3 py-2 rounded-xl font-bold text-slate-800 outline-none">
+        </div>
+      </div>
+
+      <!-- 결재라인 프리셋 버튼 -->
+      <div class="neu-inset-bar p-3.5 rounded-2xl mb-4">
+        <label class="block text-xs font-black text-slate-700 mb-2">결재선 프리셋 (원클릭 적용)</label>
+        <div class="flex flex-wrap gap-1.5 text-xs">
+          <button onclick="applyApprovalPreset('standard_chief')" class="neu-button px-2.5 py-1 rounded-lg text-slate-700 font-bold hover:text-slate-900">담당-실장-학교장 (표준)</button>
+          <button onclick="applyApprovalPreset('vice_principal')" class="neu-button px-2.5 py-1 rounded-lg text-slate-700 font-bold hover:text-slate-900">담당-교감-학교장</button>
+          <button onclick="applyApprovalPreset('four_steps')" class="neu-button px-2.5 py-1 rounded-lg text-slate-700 font-bold hover:text-slate-900">담당-실장-교감-학교장 (4단)</button>
+          <button onclick="applyApprovalPreset('chief_jeongyeol')" class="neu-button px-2.5 py-1 rounded-lg text-slate-700 font-bold hover:text-slate-900">실장 (전결)</button>
+          <button onclick="applyApprovalPreset('vice_jeongyeol')" class="neu-button px-2.5 py-1 rounded-lg text-slate-700 font-bold hover:text-slate-900">교감 (전결)</button>
+          <button onclick="applyApprovalPreset('vice_daegyeol')" class="neu-button px-2.5 py-1 rounded-lg text-slate-700 font-bold hover:text-slate-900">교감 (대결)</button>
+        </div>
+      </div>
+
+      <!-- 동적 결재단계 목록 -->
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-xs font-black text-slate-700">결재란 단계 구성</label>
+          <button onclick="addApprovalStepRow()" class="neu-button px-2.5 py-1 rounded-lg text-[11px] font-bold text-emerald-800 flex items-center gap-1">
+            <i data-lucide="plus" class="w-3 h-3"></i> 단계 추가
+          </button>
+        </div>
+        <div id="approvalStepsList" class="space-y-2">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-4 border-t border-white/60">
+        <button onclick="closeModal('settingsModal')" class="neu-button px-4 py-2 rounded-xl text-xs font-bold text-slate-600">취소</button>
+        <button onclick="saveAllSettings()" class="neu-button-primary px-5 py-2 rounded-xl text-xs font-bold shadow">설정 저장</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       [모달 7] Google Apps Script 배포 & 7단계 사용설명서 모달
+       ========================================== -->
+  <div id="gasModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 no-print">
+    <div class="neu-card rounded-2xl max-w-3xl w-full bg-[#EEF1F8] p-6 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-white/60 mb-4">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-bold text-teal-800 neu-inset-bar mb-1">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-teal-600"></i>
+            Google 스프레드시트 & Apps Script 무료 배포 팩
+          </div>
+          <h3 class="text-base font-black text-slate-800">Apps Script 배포 및 7단계 사용설명서</h3>
+        </div>
+        <button onclick="closeModal('gasModal')" class="neu-circle-btn w-8 h-8 text-slate-500">✕</button>
+      </div>
+
+      <!-- Segmented Buttons -->
+      <div class="flex gap-2 mb-4 p-1 neu-inset-bar rounded-xl">
+        <button id="btnGasTab1" onclick="switchGasModalTab('guide')" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold neu-inset-bar text-slate-800 bg-[#dbe0e7]">
+          📖 7단계 사용설명서 & 배포 가이드
+        </button>
+        <button id="btnGasTab2" onclick="switchGasModalTab('info')" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-800">
+          ⚙️ 스프레드시트 배포 안내
+        </button>
+      </div>
+
+      <!-- Tab Content: 7단계 종합 사용설명서 -->
+      <div id="gasTabGuide" class="space-y-3 text-xs text-slate-700 max-h-[55vh] overflow-y-auto pr-1">
+        <div class="neu-inset-bar p-3.5 rounded-xl space-y-1">
+          <div class="font-black text-slate-800 flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-blue-600 text-white inline-flex items-center justify-center text-[10px]">1</span>
+            스프레드시트 사본 만들기 (도입 시작)
+          </div>
+          <p class="text-slate-600 pl-6 leading-relaxed">
+            구글 드라이브에서 표준 템플릿 스프레드시트를 열고 <strong>[파일] > [사본 만들기]</strong>를 실행하여 학교 전용 드라이브에 안전하게 보관합니다.
+          </p>
+        </div>
+
+        <div class="neu-inset-bar p-3.5 rounded-xl space-y-1">
+          <div class="font-black text-slate-800 flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-blue-600 text-white inline-flex items-center justify-center text-[10px]">2</span>
+            Apps Script 코드 확인 및 저장 방법
+          </div>
+          <p class="text-slate-600 pl-6 leading-relaxed">
+            스프레드시트 상단 메뉴 <strong>[확장 프로그램] > [Apps Script]</strong>를 클릭하고, <code>Code.gs</code>에 백엔드 코드를, <code>index.html</code>에 프론트엔드 코드를 넣은 후 <strong>저장(Ctrl+S)</strong>합니다.
+          </p>
+        </div>
+
+        <div class="neu-inset-bar p-3.5 rounded-xl space-y-1">
+          <div class="font-black text-slate-800 flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-blue-600 text-white inline-flex items-center justify-center text-[10px]">3</span>
+            [트리거 메뉴] 초기 시스템 자동 환경설정
+          </div>
+          <p class="text-slate-600 pl-6 leading-relaxed">
+            스프레드시트를 새로고침(F5)하면 상단에 나타나는 <strong>[📋 스쿨사인 365] > [🚀 전체 시트 초기화 및 사용설명서 생성]</strong>을 클릭하여 <code>근무기록</code> 및 <code>사용설명서</code> 시트를 원클릭 자동 구성합니다.
+          </p>
+        </div>
+
+        <div class="neu-inset-bar p-3.5 rounded-xl space-y-1">
+          <div class="font-black text-slate-800 flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-blue-600 text-white inline-flex items-center justify-center text-[10px]">4</span>
+            웹 앱 실제 사용 방법 (신청자 & 관리자)
+          </div>
+          <p class="text-slate-600 pl-6 leading-relaxed">
+            출근대장에서 실시간 서명 현황 확인, 기간 일괄 확인자 서명, K-에듀파인 지출품의서 공문 문구 원클릭 생성, 엑셀/PDF 내보내기 및 A4 법정 규격 인쇄를 완벽히 수행할 수 있습니다.
+          </p>
+        </div>
+
+        <div class="neu-inset-bar p-3.5 rounded-xl space-y-1">
+          <div class="font-black text-slate-800 flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-blue-600 text-white inline-flex items-center justify-center text-[10px]">5</span>
+            근로자 모바일 사용 방법
+          </div>
+          <p class="text-slate-600 pl-6 leading-relaxed">
+            근로자는 별도의 앱 설치나 로그인 없이 스마트폰 기본 카메라로 교내에 부착된 비치용 QR코드를 스캔하여 3초 만에 전자서명을 제출합니다.
+          </p>
+        </div>
+
+        <div class="neu-inset-bar p-3.5 rounded-xl space-y-1">
+          <div class="font-black text-slate-800 flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-blue-600 text-white inline-flex items-center justify-center text-[10px]">6</span>
+            웹 앱 배포 및 업데이트 방법 (새 배포 vs 배포 관리)
+          </div>
+          <p class="text-slate-600 pl-6 leading-relaxed">
+            코드 수정 후에는 기존 QR코드 주소를 그대로 유지하기 위해 반드시 <strong>[배포] > [배포 관리] > 연필(수정) > [새 버전]</strong>을 선택하여 배포합니다.
+          </p>
+        </div>
+
+        <div class="neu-inset-bar p-3.5 rounded-xl space-y-1">
+          <div class="font-black text-slate-800 flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-blue-600 text-white inline-flex items-center justify-center text-[10px]">7</span>
+            근로자, 교직원 안내 및 홍보 방법
+          </div>
+          <p class="text-slate-600 pl-6 leading-relaxed">
+            하단 메뉴의 <strong>[비치용 QR]</strong>에서 <strong>[A4 포스터 인쇄]</strong>를 눌러 급식실, 행정실, 당직실 입구 등에 부착하여 근로자분들이 편리하게 이용하도록 안내합니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- Tab Content: 스프레드시트 배포 안내 -->
+      <div id="gasTabInfo" class="space-y-3 text-xs text-slate-700 hidden">
+        <div class="neu-inset-bar p-4 rounded-xl space-y-2">
+          <div class="font-bold text-slate-800 text-sm">💡 Google Apps Script 웹 앱 권한 설정 안내</div>
+          <p class="text-slate-600 leading-relaxed">
+            웹 앱 배포 시 아래 두 가지 권한 옵션을 반드시 확인해 주세요:
+          </p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-700">
+            <li><strong>다음 사용자로 실행:</strong> <code>나 (내 계정)</code> 선택</li>
+            <li><strong>액세스 권한:</strong> <code>모든 사용자 (Anyone)</code> 선택 (외부 대체인력이 구글 로그인 없이 출근 서명할 수 있도록 필수)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-4 border-t border-white/60 mt-4">
+        <button onclick="closeModal('gasModal')" class="neu-button px-5 py-2 rounded-xl text-xs font-bold text-slate-700">닫기</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       [인쇄 전용] 공식 규격 근무상황 확인대장 (3단/4단/전결 지원)
+       - 화면에서는 display: none !important로 완전히 숨겨져 모바일/관리자 화면 하단에 절대 노출되지 않음
+       ========================================== -->
+  <div id="printArea" class="hidden print-document p-8">
+    <div class="flex justify-between items-center mb-4">
+      <div id="printDocTitle" class="text-xl font-black text-slate-900">행복초등학교 근무상황 확인대장</div>
+      <table id="printApprovalBox" class="border-collapse border border-slate-700 text-xs text-center">
+      </table>
+    </div>
+
+    <table class="w-full border-collapse border border-slate-700 text-xs text-center">
+      <thead class="bg-slate-100">
+        <tr>
+          <th class="border border-slate-700 py-1.5 px-1">순번</th>
+          <th class="border border-slate-700 py-1.5 px-2 whitespace-nowrap min-w-[95px]">근무일자</th>
+          <th class="border border-slate-700 py-1.5 px-2">인력 유형</th>
+          <th class="border border-slate-700 py-1.5 px-2 w-20">성명</th>
+          <th class="border border-slate-700 py-1.5 px-2">근무시간</th>
+          <th class="border border-slate-700 py-1.5 px-1">인정(h)</th>
+          <th class="border border-slate-700 py-1.5 px-2 w-24">근무자 서명</th>
+          <th class="border border-slate-700 py-1.5 px-2 w-24">확인자 서명</th>
+          <th class="border border-slate-700 py-1.5 px-2">비고 (수기 기재)</th>
+        </tr>
+      </thead>
+      <tbody id="printTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- ==========================================
+       [인쇄 전용] 비치용 A4 출근 안내 포스터
+       - 비치용 QR A4 포스터 인쇄 클릭 시에만 단독 출력
+       ========================================== -->
+  <div id="printQrPosterArea" class="hidden print-document p-10 max-w-xl mx-auto text-center border-4 border-teal-800 rounded-2xl bg-white my-8">
+    <div class="flex items-center justify-center gap-2 text-teal-800 font-extrabold text-sm mb-3">
+      <i data-lucide="building-2" class="w-5 h-5"></i>
+      <span id="printQrPosterSchoolName">행복초등학교</span>
+    </div>
+    <h1 class="text-3xl font-black text-slate-900 tracking-tight mb-2">스쿨사인 365</h1>
+    <p class="text-base font-bold text-slate-700 mb-1">단기·대체인력 근무확인서 모바일 전자서명</p>
+    <p class="text-xs font-semibold text-teal-700 mb-6">스마트폰 카메라로 QR코드를 스캔하여 서명해 주세요</p>
+    <div class="inline-block p-4 bg-white border-2 border-slate-300 rounded-2xl shadow-sm mb-6">
+      <img id="printQrPosterImg" src="" alt="QR" class="w-56 h-56 mx-auto object-contain">
+    </div>
+    <div class="grid grid-cols-3 gap-3 text-center">
+      <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+        <span class="w-5 h-5 rounded-full bg-teal-800 text-white font-bold text-[10px] inline-flex items-center justify-center mb-1">1</span>
+        <p class="text-xs font-bold text-slate-800">QR 스캔</p>
+        <p class="text-[10px] text-slate-400 mt-0.5">기본 카메라로 비추기</p>
+      </div>
+      <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+        <span class="w-5 h-5 rounded-full bg-teal-800 text-white font-bold text-[10px] inline-flex items-center justify-center mb-1">2</span>
+        <p class="text-xs font-bold text-slate-800">시간/성명 확인</p>
+        <p class="text-[10px] text-slate-400 mt-0.5">출퇴근 시간 확인</p>
+      </div>
+      <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+        <span class="w-5 h-5 rounded-full bg-teal-800 text-white font-bold text-[10px] inline-flex items-center justify-center mb-1">3</span>
+        <p class="text-xs font-bold text-slate-800">본인 서명 제출</p>
+        <p class="text-[10px] text-slate-400 mt-0.5">전자서명 후 완료</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       자바스크립트 전체 비즈니스 로직 (순수 HTML/JS - 템플릿 컴파일 오류 100% 차단)
+       ========================================== -->
+  <script>
+    var serverWebAppUrl = "";
+    var serverMode = "";
+
+    // 1. 상태 변수 및 초기 데이터
+    let schoolSettings = {
+      schoolName: '행복초등학교',
+      schoolOfficeContact: '061-260-1234',
+      adminOfficer: '김담당 (주무관)',
+      adminOfficeChief: '박실장 (실장)',
+      principalName: '이빛나 (학교장)',
+      approvalLine: [
+        { id: '1', roleName: '담당', approverName: '김담당', approvalType: '일반' },
+        { id: '2', roleName: '실장', approverName: '박실장', approvalType: '일반' },
+        { id: '3', roleName: '학교장', approverName: '이빛나', approvalType: '일반' }
+      ]
+    };
+
+    let workerTypes = [
+      { id: 'type-1', name: '급식실 대체인력', defaultStartTime: '07:30', defaultEndTime: '15:30', defaultBreakHours: 1, hourlyWage: 11200, dailyWage: 78400, description: '조리실무사 결원 시 조리 및 배식 지원' },
+      { id: 'type-2', name: '배움터지킴이', defaultStartTime: '08:30', defaultEndTime: '16:30', defaultBreakHours: 1, hourlyWage: 6000, dailyWage: 48000, description: '학생 등하교 안전지도 및 방문객 안내' },
+      { id: 'type-3', name: '늘봄·돌봄 대체', defaultStartTime: '12:30', defaultEndTime: '17:30', defaultBreakHours: 0.5, hourlyWage: 12500, dailyWage: 56250, description: '돌봄전담사 부재 시 아동 보육 지도' },
+      { id: 'type-4', name: '시설보조·환경정비', defaultStartTime: '08:30', defaultEndTime: '16:30', defaultBreakHours: 1, hourlyWage: 10800, dailyWage: 75600, description: '교내 환경정비 및 시설 수목 관리' }
+    ];
+
+    const mockSig1 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='36'><path d='M10 20 Q 30 5, 50 20 T 90 20' stroke='black' fill='none' stroke-width='2'/></svg>";
+    const mockSig2 = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='36'><path d='M15 25 Q 40 10, 85 25' stroke='black' fill='none' stroke-width='2'/></svg>";
+    const mockVerSig = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='36'><path d='M10 25 Q 50 5, 90 20' stroke='%231d4ed8' fill='none' stroke-width='2'/></svg>";
+
+    // 앱 실행 시 캐시 데이터 복원 (이후 syncRecordsFromSheet로 스프레드시트 실시간 동기화)
+    let records = [];
+    try {
+      const cached = localStorage.getItem('schoolpass_records_cache');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          records = parsed;
+        }
+      }
+    } catch(e) {
+      records = [];
+    }
+
+    let selectedRecordIds = new Set();
+    let currentFilterPeriod = 'all';
+
+    function getSafeSig(sig) {
+      if (!sig) return '';
+      return sig.replace(/"/g, "'");
+    }
+
+    function formatKoreanDate(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        const y = parts[0];
+        const m = parseInt(parts[1], 10);
+        const d = parseInt(parts[2], 10);
+        return `${y}. ${m}. ${d}`;
+      }
+      return dateStr;
+    }
+
+    // 2. 초기 렌더링 및 모드 판단 (iframe, userCodeAppPanel 및 직접 접속 완벽 지원)
+    function initApp() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        let isWorker = (urlParams.get('mode') === 'worker') || 
+                       (urlParams.get('view') === 'worker') || 
+                       (urlParams.get('worker') !== null) ||
+                       (urlParams.get('sign') !== null) ||
+                       (typeof serverMode !== 'undefined' && serverMode === 'worker') ||
+                       (window.location.hash.indexOf('worker') !== -1) ||
+                       (window.location.hash.indexOf('sign') !== -1) ||
+                       (document.referrer && (document.referrer.indexOf('mode=worker') !== -1 || document.referrer.indexOf('view=worker') !== -1));
+
+        // Google Apps Script iframe 환경 비동기 URL 파라미터 감지
+        if (typeof google !== 'undefined' && google.script && google.script.url && google.script.url.getLocation) {
+          google.script.url.getLocation(function(loc) {
+            if (loc && loc.parameter && (loc.parameter.mode === 'worker' || loc.parameter.view === 'worker' || loc.parameter.worker !== undefined || loc.parameter.sign !== undefined)) {
+              showWorkerMode();
+            }
+          });
+        }
+
+        if (records.length === 0) {
+          try {
+            const cached = localStorage.getItem('schoolpass_records_cache');
+            if (cached) {
+              const parsed = JSON.parse(cached);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                records = parsed;
+              }
+            }
+          } catch(e) {}
+        }
+
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run.withSuccessHandler(function(url) {
+            if (url) serverWebAppUrl = url;
+          }).getWebAppUrl();
+        }
+
+        const today = new Date();
+        const curYm = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+        const eduMonthEl = document.getElementById('edufineMonth');
+        if (eduMonthEl) eduMonthEl.value = curYm;
+
+        populateTypeSelects();
+        if (isWorker) {
+          showWorkerMode();
+        } else {
+          showAdminMode();
+        }
+      } catch (err) {
+        console.error("Initialization error:", err);
+        if (window.location.search.indexOf('worker') !== -1 || window.location.hash.indexOf('worker') !== -1) {
+          showWorkerMode();
+        } else {
+          showAdminMode();
+        }
+      }
+    }
+
+    // Google Apps Script iframe 환경에서는 DOMContentLoaded가 이미 완료되어 있을 수 있으므로 즉시 실행 분기
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
+
+    function showWorkerMode() {
+      const adminEl = document.getElementById('adminContainer');
+      const workerEl = document.getElementById('workerContainer');
+      if (adminEl) {
+        adminEl.style.display = 'none';
+        adminEl.classList.add('hidden');
+      }
+      if (workerEl) {
+        workerEl.style.display = 'block';
+        workerEl.classList.remove('hidden');
+      }
+      try {
+        const badge = document.getElementById('workerSchoolBadge');
+        if (badge) badge.innerText = schoolSettings.schoolName;
+        const dateInput = document.getElementById('wWorkDate');
+        if (dateInput && !dateInput.value) {
+          dateInput.value = new Date().toISOString().split('T')[0];
+        }
+        calcWorkerHours();
+      } catch(e) {}
+      setTimeout(initWorkerCanvas, 100);
+      refreshLucide();
+    }
+
+    function showAdminMode() {
+      const workerEl = document.getElementById('workerContainer');
+      const adminEl = document.getElementById('adminContainer');
+      if (workerEl) {
+        workerEl.style.display = 'none';
+        workerEl.classList.add('hidden');
+      }
+      if (adminEl) {
+        adminEl.style.display = 'block';
+        adminEl.classList.remove('hidden');
+      }
+      renderTable();
+      refreshLucide();
+      syncRecordsFromSheet(true);
+    }
+
+    // 구글 시트에서 최신 제출 기록 동기화 (주기적 자동 갱신 및 탭 포커스 지원)
+    function syncRecordsFromSheet(isSilent = false) {
+      const btn = document.getElementById('btnSyncRecords');
+      if (btn && !isSilent) {
+        btn.innerHTML = '<span class="inline-flex items-center gap-1.5"><svg class="animate-spin h-3.5 w-3.5 text-blue-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> 동기화 중...</span>';
+      }
+
+      function handleSuccess(sheetRecords) {
+        if (Array.isArray(sheetRecords)) {
+          records = sheetRecords;
+          try { localStorage.setItem('schoolpass_records_cache', JSON.stringify(sheetRecords)); } catch(e) {}
+          renderTable();
+        }
+        if (btn && !isSilent) {
+          const nowStr = new Date().toTimeString().slice(0, 5);
+          btn.innerHTML = `<span class="inline-flex items-center gap-1 text-emerald-700 font-bold"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i> ${nowStr} 갱신</span>`;
+          refreshLucide();
+          setTimeout(() => {
+            if (btn) {
+              btn.innerHTML = '<i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-blue-600"></i> 새로고침';
+              refreshLucide();
+            }
+          }, 2500);
+        }
+      }
+
+      function handleFail(err) {
+        console.warn('google.script.run 동기화 실패 또는 미지원:', err);
+        const publicUrl = getPublicWorkerUrl();
+        if (publicUrl && publicUrl.indexOf('script.google.com/macros/s/') !== -1) {
+          const endpoint = publicUrl.split('?')[0] + '?action=getRecords';
+          fetch(endpoint)
+            .then(res => res.json())
+            .then(data => {
+              if (data && data.success && Array.isArray(data.records)) {
+                handleSuccess(data.records);
+                return;
+              }
+              finishBtn();
+            })
+            .catch(() => finishBtn());
+        } else {
+          finishBtn();
+        }
+
+        function finishBtn() {
+          if (btn && !isSilent) {
+            btn.innerHTML = '<i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-blue-600"></i> 새로고침';
+            refreshLucide();
+          }
+        }
+      }
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(handleSuccess)
+          .withFailureHandler(handleFail)
+          .fetchAllRecords();
+      } else {
+        handleFail('local_env');
+      }
+    }
+
+    // 관리자 모드 백그라운드 자동 동기화 (15초 주기 및 탭 포커스 시 즉시 갱신)
+    setInterval(function() {
+      const adminEl = document.getElementById('adminContainer');
+      if (!document.hidden && adminEl && !adminEl.classList.contains('hidden')) {
+        syncRecordsFromSheet(true);
+      }
+    }, 15000);
+
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        const adminEl = document.getElementById('adminContainer');
+        if (adminEl && !adminEl.classList.contains('hidden')) {
+          syncRecordsFromSheet(true);
+        }
+      }
+    });
+
+    window.addEventListener('focus', function() {
+      const adminEl = document.getElementById('adminContainer');
+      if (adminEl && !adminEl.classList.contains('hidden')) {
+        syncRecordsFromSheet(true);
+      }
+    });
+
+    function switchToWorkerMode() {
+      showWorkerMode();
+    }
+
+    function refreshLucide() {
+      setTimeout(() => { if (window.lucide) lucide.createIcons(); }, 30);
+    }
+
+    // 3. 인력유형 셀렉트박스 채우기
+    function populateTypeSelects() {
+      const selects = [
+        document.getElementById('filterWorkerType'),
+        document.getElementById('modalWorkerType'),
+        document.getElementById('wWorkerType'),
+        document.getElementById('edufineTypeFilter')
+      ];
+
+      selects.forEach(sel => {
+        if (!sel) return;
+        const currentVal = sel.value;
+        sel.innerHTML = '';
+        if (sel.id === 'filterWorkerType' || sel.id === 'edufineTypeFilter') {
+          sel.innerHTML += '<option value="ALL">전체 직종</option>';
+        }
+        workerTypes.forEach(t => {
+          sel.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+        });
+        if (currentVal) sel.value = currentVal;
+      });
+    }
+
+    // 4. 관리자 테이블 렌더링 & 페이지네이션 (10건 단위)
+    let currentPage = 1;
+    const pageSize = 10;
+
+    function renderTable() {
+      const tbody = document.getElementById('recordTableBody');
+      tbody.innerHTML = '';
+      const filtered = getFilteredRecords();
+      document.getElementById('recordCount').innerText = filtered.length + '건';
+
+      const selCount = selectedRecordIds.size;
+      const selBadge = document.getElementById('selectedCountBadge');
+      if (selCount > 0) {
+        selBadge.innerText = selCount + '건 선택됨';
+        selBadge.classList.remove('hidden');
+      } else {
+        selBadge.classList.add('hidden');
+      }
+
+      const batchDeleteBtn = document.getElementById('btnBatchDelete');
+      const batchDeleteCountEl = document.getElementById('batchDeleteCount');
+      if (batchDeleteBtn) {
+        if (selCount > 0) {
+          batchDeleteBtn.classList.remove('hidden');
+          if (batchDeleteCountEl) batchDeleteCountEl.innerText = selCount;
+        } else {
+          batchDeleteBtn.classList.add('hidden');
+        }
+      }
+
+      // 페이지네이션 계산
+      const totalPages = Math.ceil(filtered.length / pageSize) || 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+
+      const totalEl = document.getElementById('totalRecordsCount');
+      if (totalEl) totalEl.innerText = filtered.length;
+
+      const rangeEl = document.getElementById('pageRangeText');
+      if (rangeEl) {
+        if (filtered.length > 0) {
+          const s = (currentPage - 1) * pageSize + 1;
+          const e = Math.min(currentPage * pageSize, filtered.length);
+          rangeEl.innerText = `${s} - ${e}`;
+        } else {
+          rangeEl.innerText = '0 - 0';
+        }
+      }
+
+      const indicatorEl = document.getElementById('pageIndicator');
+      if (indicatorEl) indicatorEl.innerText = `${currentPage} / ${totalPages}`;
+
+      const prevBtn = document.getElementById('btnPrevPage');
+      if (prevBtn) prevBtn.disabled = (currentPage === 1);
+
+      const nextBtn = document.getElementById('btnNextPage');
+      if (nextBtn) nextBtn.disabled = (currentPage === totalPages);
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="py-14 text-center">
+              <div class="flex flex-col items-center justify-center gap-1.5">
+                <p class="font-bold text-xs sm:text-sm text-slate-600">조회된 근무 기록이 없습니다.</p>
+                <p class="text-xs text-slate-400">상단의 검색 필터를 조정하시거나 '누락 기록 추가'를 눌러 등록해주세요.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        refreshLucide();
+        return;
+      }
+
+      const startIdx = (currentPage - 1) * pageSize;
+      const paginated = filtered.slice(startIdx, startIdx + pageSize);
+
+      paginated.forEach((r, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/40 transition-colors';
+        const displayIndex = startIdx + idx + 1;
+
+        let workerSignHtml;
+        if (r.workerSignature === '서명완료') {
+          workerSignHtml = `<span class="inline-flex items-center gap-1 text-[11px] text-emerald-800 font-extrabold px-2.5 py-1 rounded-lg bg-emerald-100/80 border border-emerald-300">
+            <i data-lucide="check" class="w-3 h-3 text-emerald-600 stroke-[3]"></i> 서명완료
+          </span>`;
+        } else if (r.workerSignature && r.workerSignature.startsWith('data:')) {
+          workerSignHtml = `<div class="inline-block p-1 bg-white rounded-lg shadow-sm border border-slate-200">
+            <img src="${getSafeSig(r.workerSignature)}" alt="서명" class="h-6 w-20 object-contain mx-auto">
+          </div>`;
+        } else {
+          workerSignHtml = `<span class="text-[11px] text-slate-500 font-bold px-2 py-0.5 rounded-lg bg-slate-100 border border-slate-300">미서명</span>`;
+        }
+
+        let verifierSignHtml;
+        if (r.verifierSignature === '서명완료') {
+          verifierSignHtml = `<span class="inline-flex items-center gap-1 text-[11px] text-blue-800 font-extrabold px-2.5 py-1 rounded-lg bg-blue-100/80 border border-blue-300">
+            <i data-lucide="check" class="w-3 h-3 text-blue-600 stroke-[3]"></i> 서명완료
+          </span>`;
+        } else if (r.verifierSignature && r.verifierSignature.startsWith('data:')) {
+          verifierSignHtml = `<div class="inline-block p-1 bg-white rounded-lg shadow-sm border border-blue-200">
+            <img src="${getSafeSig(r.verifierSignature)}" alt="확인자" class="h-6 w-20 object-contain mx-auto">
+          </div>`;
+        } else {
+          verifierSignHtml = `<span class="text-[11px] text-amber-700 font-bold px-2 py-0.5 rounded-lg bg-amber-100/70 border border-amber-200">확인 대기</span>`;
+        }
+
+        const isChecked = selectedRecordIds.has(r.id);
+
+        tr.innerHTML = `
+          <td class="py-3 px-3 text-center">
+            <input type="checkbox" onchange="toggleSelectRecord('${r.id}', this.checked)" ${isChecked ? 'checked' : ''} class="rounded cursor-pointer">
+          </td>
+          <td class="py-3 px-2 text-center text-slate-400 font-bold">${displayIndex}</td>
+          <td class="py-3 px-3 font-bold text-slate-800 whitespace-nowrap font-mono">${formatKoreanDate(r.workDate)}</td>
+          <td class="py-3 px-3">
+            <span class="neu-inset-bar px-2.5 py-0.5 rounded-lg text-[11px] font-bold text-slate-700 whitespace-nowrap">${r.workerType}</span>
+          </td>
+          <td class="py-3 px-3 font-black text-slate-800">
+            ${r.workerName}
+            ${r.contact ? `<span class="block text-[10px] font-normal text-slate-400">${r.contact}</span>` : ''}
+          </td>
+          <td class="py-3 px-3 text-center font-mono">
+            ${r.startTime}~${r.endTime}
+            <span class="block text-[10px] text-emerald-700 font-bold">${r.workHours}시간 (휴게 ${r.breakHours}h)</span>
+          </td>
+          <td class="py-3 px-3 text-center">${workerSignHtml}</td>
+          <td class="py-3 px-3 text-center">${verifierSignHtml}</td>
+          <td class="py-3 px-3 text-center">
+            <button onclick="deleteRecord('${r.id}')" class="text-rose-400 hover:text-rose-600 font-bold p-1" title="삭제">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      refreshLucide();
+    }
+
+    function changePage(delta) {
+      const filtered = getFilteredRecords();
+      const totalPages = Math.ceil(filtered.length / pageSize) || 1;
+      const nextP = currentPage + delta;
+      if (nextP >= 1 && nextP <= totalPages) {
+        currentPage = nextP;
+        renderTable();
+      }
+    }
+
+    function normalizeIsoDate(dStr) {
+      if (!dStr) return '';
+      const m = String(dStr).match(/(\d{4})[.\-\/]\s*(\d{1,2})[.\-\/]\s*(\d{1,2})/);
+      if (m) {
+        return m[1] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[3]).slice(-2);
+      }
+      return String(dStr).trim();
+    }
+
+    function getFilteredRecords() {
+      const type = document.getElementById('filterWorkerType').value;
+      const sDate = document.getElementById('filterStartDate').value;
+      const eDate = document.getElementById('filterEndDate').value;
+      const name = document.getElementById('filterName').value.trim().toLowerCase();
+
+      return records.filter(r => {
+        if (type !== 'ALL' && r.workerType && r.workerType.trim() !== type.trim()) return false;
+        const rDate = normalizeIsoDate(r.workDate);
+        if (sDate && rDate && rDate < sDate) return false;
+        if (eDate && rDate && rDate > eDate) return false;
+        if (name && !String(r.workerName || '').toLowerCase().includes(name)) return false;
+        return true;
+      });
+    }
+
+    function applyFilters() { renderTable(); }
+
+    function resetFilters() {
+      const typeEl = document.getElementById('filterWorkerType');
+      if (typeEl) typeEl.value = 'ALL';
+      const sEl = document.getElementById('filterStartDate');
+      if (sEl) sEl.value = '';
+      const eEl = document.getElementById('filterEndDate');
+      if (eEl) eEl.value = '';
+      const nEl = document.getElementById('filterName');
+      if (nEl) nEl.value = '';
+      setPeriod('all');
+    }
+
+    function setPeriod(p) {
+      currentFilterPeriod = p;
+      ['All', 'This', 'Last'].forEach(k => {
+        const btn = document.getElementById('btnPeriod' + k);
+        if (btn) {
+          btn.className = (k.toLowerCase() === p.toLowerCase() || (k==='All' && p==='all') || (k==='This' && p==='thisMonth') || (k==='Last' && p==='lastMonth'))
+            ? 'neu-inset-box px-2.5 py-1.5 rounded-xl font-bold text-emerald-700'
+            : 'neu-button px-2.5 py-1.5 rounded-xl font-bold text-slate-600';
+        }
+      });
+
+      const today = new Date();
+      if (p === 'thisMonth') {
+        const y = today.getFullYear();
+        const m = String(today.getMonth() + 1).padStart(2, '0');
+        const lastDay = new Date(y, today.getMonth() + 1, 0).getDate();
+        document.getElementById('filterStartDate').value = `${y}-${m}-01`;
+        document.getElementById('filterEndDate').value = `${y}-${m}-${lastDay}`;
+      } else if (p === 'lastMonth') {
+        const lastM = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        const y = lastM.getFullYear();
+        const m = String(lastM.getMonth() + 1).padStart(2, '0');
+        const lastDay = new Date(y, lastM.getMonth() + 1, 0).getDate();
+        document.getElementById('filterStartDate').value = `${y}-${m}-01`;
+        document.getElementById('filterEndDate').value = `${y}-${m}-${lastDay}`;
+      } else {
+        document.getElementById('filterStartDate').value = '';
+        document.getElementById('filterEndDate').value = '';
+      }
+      renderTable();
+    }
+
+    function toggleSelectRecord(id, checked) {
+      if (checked) selectedRecordIds.add(id);
+      else selectedRecordIds.delete(id);
+      renderTable();
+    }
+
+    function toggleSelectAll(checked) {
+      const filtered = getFilteredRecords();
+      if (checked) filtered.forEach(r => selectedRecordIds.add(r.id));
+      else selectedRecordIds.clear();
+      renderTable();
+    }
+
+    function closeAllModals() {
+      ['addModal', 'batchSignModal', 'edufineModal', 'workerTypeModal', 'qrModal', 'gasModal', 'settingsModal'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.remove('flex');
+          el.classList.add('hidden');
+        }
+      });
+    }
+
+    function resetBottomNavToRecords() {
+      const tabs = [
+        { navId: 'navEdufine', isEdu: true },
+        { navId: 'navWorkerTypes', isEdu: false },
+        { navId: 'navQr', isEdu: false },
+        { navId: 'navGas', isEdu: false },
+        { navId: 'navSettings', isEdu: false }
+      ];
+      tabs.forEach(t => {
+        const b = document.getElementById(t.navId);
+        if (b) {
+          b.className = `px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex items-center gap-1.5 neu-button ${t.isEdu ? 'text-emerald-700 hover:text-emerald-900' : 'text-slate-600 hover:text-slate-800'}`;
+        }
+      });
+      const recBtn = document.getElementById('navRecords');
+      if (recBtn) {
+        recBtn.className = 'px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex items-center gap-1.5 neu-inset-bar text-slate-800 bg-[#dbe0e7]';
+      }
+    }
+
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('hidden');
+        el.classList.add('flex');
+        refreshLucide();
+      }
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('flex');
+        el.classList.add('hidden');
+      }
+      resetBottomNavToRecords();
+      refreshLucide();
+    }
+
+    function openGasModal() {
+      switchGasModalTab('guide');
+      openModal('gasModal');
+    }
+
+    function switchGasModalTab(tab) {
+      const btn1 = document.getElementById('btnGasTab1');
+      const btn2 = document.getElementById('btnGasTab2');
+      const tabGuide = document.getElementById('gasTabGuide');
+      const tabInfo = document.getElementById('gasTabInfo');
+      if (tab === 'guide') {
+        if (btn1) btn1.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-bold neu-inset-bar text-slate-800 bg-[#dbe0e7]';
+        if (btn2) btn2.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-800';
+        if (tabGuide) tabGuide.classList.remove('hidden');
+        if (tabInfo) tabInfo.classList.add('hidden');
+      } else {
+        if (btn1) btn1.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-800';
+        if (btn2) btn2.className = 'flex-1 py-2 px-3 rounded-lg text-xs font-bold neu-inset-bar text-slate-800 bg-[#dbe0e7]';
+        if (tabGuide) tabGuide.classList.add('hidden');
+        if (tabInfo) tabInfo.classList.remove('hidden');
+      }
+      refreshLucide();
+    }
+
+    // 5. 모바일 서명 처리 (WorkerSubmission)
+    let wCanvas, wCtx, wDrawing = false;
+    function initWorkerCanvas() {
+      wCanvas = document.getElementById('workerSignCanvas');
+      if (!wCanvas) return;
+      wCtx = wCanvas.getContext('2d');
+      wCtx.strokeStyle = '#0f172a';
+      wCtx.lineWidth = 2.5;
+      wCtx.lineCap = 'round';
+
+      wCanvas.onmousedown = (e) => { wDrawing = true; wCtx.beginPath(); wCtx.moveTo(e.offsetX, e.offsetY); };
+      wCanvas.onmousemove = (e) => { if (wDrawing) { wCtx.lineTo(e.offsetX, e.offsetY); wCtx.stroke(); } };
+      window.onmouseup = () => { wDrawing = false; };
+
+      wCanvas.ontouchstart = (e) => {
+        e.preventDefault();
+        const rect = wCanvas.getBoundingClientRect();
+        const t = e.touches[0];
+        wDrawing = true;
+        wCtx.beginPath();
+        wCtx.moveTo(t.clientX - rect.left, t.clientY - rect.top);
+      };
+      wCanvas.ontouchmove = (e) => {
+        if (!wDrawing) return;
+        e.preventDefault();
+        const rect = wCanvas.getBoundingClientRect();
+        const t = e.touches[0];
+        wCtx.lineTo(t.clientX - rect.left, t.clientY - rect.top);
+        wCtx.stroke();
+      };
+      wCanvas.ontouchend = () => { wDrawing = false; };
+    }
+
+    function clearWorkerCanvas() {
+      if (wCtx) wCtx.clearRect(0, 0, wCanvas.width, wCanvas.height);
+    }
+
+    function onWorkerTypeSelectChange() {
+      const typeName = document.getElementById('wWorkerType').value;
+      const t = workerTypes.find(x => x.name === typeName);
+      if (t) {
+        document.getElementById('wStartTime').value = t.defaultStartTime;
+        document.getElementById('wEndTime').value = t.defaultEndTime;
+        document.getElementById('wBreakHours').value = t.defaultBreakHours;
+      }
+      calcWorkerHours();
+    }
+
+    function calcWorkerHours() {
+      const s = document.getElementById('wStartTime').value;
+      const e = document.getElementById('wEndTime').value;
+      const b = Number(document.getElementById('wBreakHours').value);
+      if (!s || !e) return;
+      const [sH, sM] = s.split(':').map(Number);
+      const [eH, eM] = e.split(':').map(Number);
+      const totalMin = (eH * 60 + eM) - (sH * 60 + sM) - (b * 60);
+      const hours = Math.max(0, Math.round((totalMin / 60) * 10) / 10);
+      document.getElementById('wCalcHours').innerText = hours + '시간';
+    }
+
+    function handleWorkerSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('wWorkerName').value.trim();
+      if (!name) { alert('근무자 성명을 입력하세요.'); return; }
+
+      const s = document.getElementById('wStartTime').value;
+      const eTime = document.getElementById('wEndTime').value;
+      const b = Number(document.getElementById('wBreakHours').value);
+      const [sH, sM] = s.split(':').map(Number);
+      const [eH, eM] = eTime.split(':').map(Number);
+      const totalMin = (eH * 60 + eM) - (sH * 60 + sM) - (b * 60);
+      const hours = Math.max(0, Math.round((totalMin / 60) * 10) / 10);
+
+      const typeName = document.getElementById('wWorkerType').value;
+      const tObj = workerTypes.find(x => x.name === typeName);
+      const dailyPay = tObj ? Math.round(hours * tObj.hourlyWage) : Math.round(hours * 11200);
+
+      const signData = wCanvas ? wCanvas.toDataURL('image/png') : '';
+      const isSigned = (signData && signData.length > 20);
+      const wDate = document.getElementById('wWorkDate').value;
+
+      const newRec = {
+        id: 'rec-' + Date.now(),
+        workDate: wDate,
+        workerType: typeName,
+        workerName: name,
+        contact: document.getElementById('wContact').value.trim(),
+        startTime: s,
+        endTime: eTime,
+        breakHours: b,
+        workHours: hours,
+        dailyPay: dailyPay,
+        workerSignature: isSigned ? '서명완료' : '미서명',
+        verifierSignature: '미서명',
+        verifierName: '',
+        notes: '모바일 출근 서명 제출'
+      };
+
+      records.unshift(newRec);
+
+      const submitBtn = document.getElementById('workerSubmitBtn');
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="inline-flex items-center gap-2"><svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> 구글 시트 저장 중...</span>';
+      }
+
+      function finishSubmit() {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnHtml;
+        }
+        document.getElementById('rcptName').innerText = name + ' 님';
+        document.getElementById('rcptType').innerText = typeName;
+        document.getElementById('rcptDate').innerText = wDate;
+        document.getElementById('rcptTime').innerText = `${s} ~ ${eTime} (인정 ${hours}시간)`;
+
+        document.getElementById('workerFormCard').classList.add('hidden');
+        document.getElementById('workerSuccessCard').classList.remove('hidden');
+        refreshLucide();
+      }
+
+      // 구글 앱스 스크립트 시트에 실시간 기록 저장 (관리자 모드에 즉시 반영)
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(res) {
+            if (res && res.id) newRec.id = res.id;
+            finishSubmit();
+          })
+          .withFailureHandler(function(err) {
+            console.error('시트 저장 오류:', err);
+            finishSubmit();
+          })
+          .appendWorkRecord(newRec);
+      } else {
+        const publicUrl = getPublicWorkerUrl();
+        if (publicUrl && publicUrl.indexOf('script.google.com/macros/s/') !== -1) {
+          const endpoint = publicUrl.split('?')[0];
+          fetch(endpoint, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'addRecord', record: newRec })
+          }).then(() => {
+            finishSubmit();
+          }).catch(err => {
+            console.error('fetch 실패:', err);
+            finishSubmit();
+          });
+        } else {
+          finishSubmit();
+        }
+      }
+    }
+
+    function handleExitApp() {
+      try {
+        window.close();
+      } catch (err) {}
+      setTimeout(() => {
+        document.getElementById('workerSuccessCard').classList.add('hidden');
+        document.getElementById('workerClosedCard').classList.remove('hidden');
+        refreshLucide();
+      }, 300);
+    }
+
+    // 6. 누가 기록 수기 추가 (RecordModal)
+    function openAddModal() {
+      document.getElementById('modalWorkDate').value = new Date().toISOString().split('T')[0];
+      calculateModalHours();
+      openModal('addModal');
+    }
+
+    function calculateModalHours() {
+      const s = document.getElementById('modalStartTime').value;
+      const e = document.getElementById('modalEndTime').value;
+      const b = Number(document.getElementById('modalBreakHours').value);
+      if (!s || !e) return;
+      const [sH, sM] = s.split(':').map(Number);
+      const [eH, eM] = e.split(':').map(Number);
+      const totalMin = (eH * 60 + eM) - (sH * 60 + sM) - (b * 60);
+      const hours = Math.max(0, Math.round((totalMin / 60) * 10) / 10);
+
+      const typeName = document.getElementById('modalWorkerType').value;
+      const t = workerTypes.find(x => x.name === typeName);
+      const pay = t ? Math.round(hours * t.hourlyWage) : Math.round(hours * 11200);
+
+      document.getElementById('modalCalcHours').innerText = hours + '시간';
+      document.getElementById('modalCalcPay').innerText = pay.toLocaleString() + '원';
+    }
+
+    function onModalTypeChange() {
+      calculateModalHours();
+    }
+
+    function handleSaveRecord(e) {
+      e.preventDefault();
+      const s = document.getElementById('modalStartTime').value;
+      const eTime = document.getElementById('modalEndTime').value;
+      const b = Number(document.getElementById('modalBreakHours').value);
+      const [sH, sM] = s.split(':').map(Number);
+      const [eH, eM] = eTime.split(':').map(Number);
+      const totalMin = (eH * 60 + eM) - (sH * 60 + sM) - (b * 60);
+      const hours = Math.max(0, Math.round((totalMin / 60) * 10) / 10);
+
+      const typeName = document.getElementById('modalWorkerType').value;
+      const tObj = workerTypes.find(x => x.name === typeName);
+      const pay = tObj ? Math.round(hours * tObj.hourlyWage) : Math.round(hours * 11200);
+
+      const newRec = {
+        id: 'rec-' + Date.now(),
+        workDate: document.getElementById('modalWorkDate').value,
+        workerType: typeName,
+        workerName: document.getElementById('modalWorkerName').value.trim(),
+        startTime: s,
+        endTime: eTime,
+        breakHours: b,
+        workHours: hours,
+        dailyPay: pay,
+        workerSignature: '', // 수기 추가는 화면 전자서명 없음 (인쇄본 자필 서명)
+        verifierSignature: '',
+        verifierName: '',
+        notes: document.getElementById('modalNotes').value.trim() || '정상 근무 확인'
+      };
+
+      records.unshift(newRec);
+
+      // 구글 앱스 스크립트 시트에도 동기화 저장
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run.appendWorkRecord(newRec);
+      }
+
+      closeModal('addModal');
+      renderTable();
+      alert('✅ 누가 기록이 추가되었습니다. 인쇄 시 근무자가 직접 수기 서명하도록 안내해 주시기 바랍니다.');
+    }
+
+    function deleteRecord(id) {
+      if (!confirm('이 근무기록을 삭제하시겠습니까?')) return;
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run.deleteRecordById(id);
+      }
+      records = records.filter(r => r.id !== id);
+      selectedRecordIds.delete(id);
+      renderTable();
+    }
+
+    // 선택된 근무기록 일괄 삭제 (구글 시트 연동)
+    function batchDeleteSelectedRecords() {
+      if (selectedRecordIds.size === 0) return;
+      const count = selectedRecordIds.size;
+      if (!confirm(`선택하신 ${count}건의 근무 기록을 일괄 삭제하시겠습니까?\n(삭제 후 복구할 수 없습니다.)`)) return;
+
+      const idsToDelete = Array.from(selectedRecordIds);
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(deletedCount) {
+            console.log("시트 일괄 삭제 완료:", deletedCount);
+          })
+          .withFailureHandler(function(err) {
+            console.error("시트 일괄 삭제 실패:", err);
+          })
+          .batchDeleteRecords(idsToDelete);
+      }
+
+      records = records.filter(r => !selectedRecordIds.has(r.id));
+      selectedRecordIds.clear();
+      renderTable();
+      alert(`✅ ${count}건의 근무 기록이 일괄 삭제되었습니다.`);
+    }
+
+    // 7. 기간 일괄 서명 (직접 서명 패드)
+    let vCanvas, vCtx, vDrawing = false;
+    function initVerifierCanvas() {
+      vCanvas = document.getElementById('verifierSignCanvas');
+      if (!vCanvas) return;
+      vCtx = vCanvas.getContext('2d');
+      vCtx.strokeStyle = '#1d4ed8';
+      vCtx.lineWidth = 2.5;
+      vCtx.lineCap = 'round';
+
+      vCanvas.onmousedown = (e) => { vDrawing = true; vCtx.beginPath(); vCtx.moveTo(e.offsetX, e.offsetY); };
+      vCanvas.onmousemove = (e) => { if (vDrawing) { vCtx.lineTo(e.offsetX, e.offsetY); vCtx.stroke(); } };
+      window.onmouseup = () => { vDrawing = false; };
+
+      vCanvas.ontouchstart = (e) => {
+        e.preventDefault();
+        const rect = vCanvas.getBoundingClientRect();
+        const t = e.touches[0];
+        vDrawing = true;
+        vCtx.beginPath();
+        vCtx.moveTo(t.clientX - rect.left, t.clientY - rect.top);
+      };
+      vCanvas.ontouchmove = (e) => {
+        if (!vDrawing) return;
+        e.preventDefault();
+        const rect = vCanvas.getBoundingClientRect();
+        const t = e.touches[0];
+        vCtx.lineTo(t.clientX - rect.left, t.clientY - rect.top);
+        vCtx.stroke();
+      };
+      vCanvas.ontouchend = () => { vDrawing = false; };
+    }
+
+    function clearVerifierCanvas() {
+      if (vCtx) vCtx.clearRect(0, 0, vCanvas.width, vCanvas.height);
+    }
+
+    function openBatchSignModal() {
+      const targetIds = selectedRecordIds.size > 0 ? Array.from(selectedRecordIds) : records.map(r => r.id);
+      document.getElementById('batchCountBadge').innerText = targetIds.length + '건';
+      openModal('batchSignModal');
+      setTimeout(initVerifierCanvas, 100);
+      clearVerifierCanvas();
+    }
+
+    function executeBatchSign() {
+      const verifier = document.getElementById('batchVerifierName').value.trim();
+      if (!verifier) { alert('확인자 성명을 입력해주세요.'); return; }
+      const signData = vCanvas ? vCanvas.toDataURL('image/png') : '';
+      const targetIds = selectedRecordIds.size > 0 ? Array.from(selectedRecordIds) : records.map(r => r.id);
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run.batchVerifyRecords(targetIds, verifier, signData);
+      }
+
+      records.forEach(r => {
+        if (targetIds.includes(r.id)) {
+          r.verifierName = verifier;
+          r.verifierSignature = signData;
+        }
+      });
+
+      closeModal('batchSignModal');
+      renderTable();
+      alert(`✅ ${targetIds.length}건의 근무기록에 확인자 직접 서명이 일괄 날인되었습니다.`);
+    }
+
+    // 8. K-에듀파인 지출품의 요약서
+    function openEdufineModal() {
+      renderEdufineModal();
+      openModal('edufineModal');
+    }
+
+    function renderEdufineModal() {
+      const targetMonth = document.getElementById('edufineMonth').value;
+      const typeFilter = document.getElementById('edufineTypeFilter').value;
+
+      const filtered = records.filter(r => {
+        const matchMonth = r.workDate.startsWith(targetMonth);
+        const matchType = typeFilter === 'ALL' || typeFilter === '전체' || r.workerType === typeFilter;
+        return matchMonth && matchType;
+      });
+
+      const map = new Map();
+      filtered.forEach(r => {
+        const key = `${r.workerName}_${r.workerType}`;
+        const existing = map.get(key);
+        if (!existing) {
+          map.set(key, {
+            workerName: r.workerName,
+            workerType: r.workerType,
+            contact: r.contact || '',
+            totalDays: 1,
+            totalHours: r.workHours,
+            totalGross: r.dailyPay || 0
+          });
+        } else {
+          existing.totalDays += 1;
+          existing.totalHours += r.workHours;
+          existing.totalGross += r.dailyPay || 0;
+        }
+      });
+
+      const aggregated = Array.from(map.values()).map(item => {
+        const isVolunteer = item.workerType.includes('지킴이');
+        const empIns = isVolunteer ? 0 : Math.floor(item.totalGross * 0.009);
+        const netPay = item.totalGross - empIns;
+        return { ...item, empIns, netPay };
+      });
+
+      const tbody = document.getElementById('edufineTableBody');
+      tbody.innerHTML = '';
+
+      let sumGross = 0;
+      let sumHours = 0;
+      let sumNet = 0;
+
+      aggregated.forEach((item, idx) => {
+        sumGross += item.totalGross;
+        sumHours += item.totalHours;
+        sumNet += item.netPay;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="py-2.5 px-2 text-center text-slate-400 font-bold">${idx + 1}</td>
+          <td class="py-2.5 px-2 font-bold">${item.workerType}</td>
+          <td class="py-2.5 px-2 font-extrabold text-slate-800">${item.workerName}</td>
+          <td class="py-2.5 px-2 text-center font-bold">${item.totalDays}일</td>
+          <td class="py-2.5 px-2 text-center font-mono">${item.totalHours}h</td>
+          <td class="py-2.5 px-2 text-right font-bold text-slate-800">${item.totalGross.toLocaleString()}원</td>
+          <td class="py-2.5 px-2 text-right text-rose-600 font-medium">${item.empIns.toLocaleString()}원</td>
+          <td class="py-2.5 px-2 text-right font-extrabold text-emerald-700">${item.netPay.toLocaleString()}원</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('efTotalWorkers').innerText = aggregated.length + '명';
+      document.getElementById('efTotalHours').innerText = sumHours.toFixed(1) + '시간';
+      document.getElementById('efTotalGross').innerText = sumGross.toLocaleString() + '원';
+
+      // K-에듀파인 지출품의 공문 양식 문구 자동생성
+      const [year, month] = targetMonth.split('-');
+      const typeLabel = (typeFilter === 'ALL' || typeFilter === '전체') ? '단기·대체인력' : typeFilter;
+      let text = `1. 관련: ${schoolSettings.schoolName} 교육공무직원 및 단기대체인력 운영 관리계획\n`;
+      text += `2. ${year}년 ${parseInt(month, 10)}월 ${typeLabel} 인건비를 아래와 같이 지급하고자 품의합니다.\n\n`;
+      text += `  가. 지급대상: 총 ${aggregated.length}명\n`;
+      text += `  나. 지급총액: 금 ${sumGross.toLocaleString()}원 (실지급액: 금 ${sumNet.toLocaleString()}원)\n`;
+      text += `  다. 세부 지급내역:\n`;
+      aggregated.forEach((item, idx) => {
+        text += `    [${idx + 1}] ${item.workerName} (${item.workerType}) : ${item.totalDays}일(${item.totalHours}시간) / 총액 ${item.totalGross.toLocaleString()}원 (공제 ${item.empIns.toLocaleString()}원 / 실지급 ${item.netPay.toLocaleString()}원)\n`;
+      });
+      text += `\n붙임: 1. ${year}년 ${parseInt(month, 10)}월 근무확인서 및 출근부 각 1부. 끝.`;
+
+      document.getElementById('edufineCopyArea').value = text;
+      refreshLucide();
+    }
+
+    function copyEdufineText() {
+      const area = document.getElementById('edufineCopyArea');
+      area.select();
+      navigator.clipboard.writeText(area.value);
+      alert('📋 품의 문구가 클립보드에 복사되었습니다! K-에듀파인에 붙여넣기 하세요.');
+    }
+
+    // 9. 인력유형 및 기준단가 관리 (WorkerTypesView)
+    function openWorkerTypeModal() {
+      renderWorkerTypeTable();
+      openModal('workerTypeModal');
+    }
+
+    function renderWorkerTypeTable() {
+      const tbody = document.getElementById('workerTypeTableBody');
+      tbody.innerHTML = '';
+      workerTypes.forEach((t, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/40 transition-colors';
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-bold text-slate-800">
+            ${t.name}
+            <span class="block text-[10px] font-normal text-slate-400">${t.description || ''}</span>
+          </td>
+          <td class="py-2.5 px-2 text-center font-mono">${t.defaultStartTime}~${t.defaultEndTime}</td>
+          <td class="py-2.5 px-2 text-center">${t.defaultBreakHours}h</td>
+          <td class="py-2.5 px-3 text-right font-mono font-bold">${t.hourlyWage.toLocaleString()}원</td>
+          <td class="py-2.5 px-3 text-right font-mono font-extrabold text-emerald-700">${t.dailyWage.toLocaleString()}원</td>
+          <td class="py-2.5 px-2 text-center">
+            <button onclick="editWorkerType('${t.id}')" class="text-blue-600 hover:text-blue-800 p-1 font-bold">수정</button>
+            <button onclick="deleteWorkerType('${t.id}')" class="text-rose-500 hover:text-rose-700 p-1 font-bold">삭제</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      refreshLucide();
+    }
+
+    let editingTypeId = null;
+    function toggleAddTypeForm(forceState) {
+      const card = document.getElementById('typeFormCard');
+      const isHidden = card.classList.contains('hidden');
+      const show = forceState !== undefined ? forceState : isHidden;
+      if (show) {
+        card.classList.remove('hidden');
+        if (!editingTypeId) {
+          document.getElementById('typeFormTitle').innerText = '신규 인력유형 등록';
+          document.getElementById('tfName').value = '';
+          document.getElementById('tfHourly').value = 11200;
+          document.getElementById('tfDaily').value = 78400;
+          document.getElementById('tfStart').value = '08:30';
+          document.getElementById('tfEnd').value = '16:30';
+          document.getElementById('tfBreak').value = 1;
+        }
+      } else {
+        card.classList.add('hidden');
+        editingTypeId = null;
+      }
+    }
+
+    function calcTypeDailyWage() {
+      const s = document.getElementById('tfStart').value;
+      const e = document.getElementById('tfEnd').value;
+      const b = Number(document.getElementById('tfBreak').value || 0);
+      const hRate = Number(document.getElementById('tfHourly').value || 0);
+      if (!s || !e) return;
+      const [sH, sM] = s.split(':').map(Number);
+      const [eH, eM] = e.split(':').map(Number);
+      const totalMin = (eH * 60 + eM) - (sH * 60 + sM) - (b * 60);
+      const hours = Math.max(0, Math.round((totalMin / 60) * 10) / 10);
+      document.getElementById('tfDaily').value = Math.round(hours * hRate);
+    }
+
+    function editWorkerType(id) {
+      const t = workerTypes.find(x => x.id === id);
+      if (!t) return;
+      editingTypeId = id;
+      document.getElementById('typeFormTitle').innerText = '인력유형 수정: ' + t.name;
+      document.getElementById('tfName').value = t.name;
+      document.getElementById('tfHourly').value = t.hourlyWage;
+      document.getElementById('tfDaily').value = t.dailyWage;
+      document.getElementById('tfStart').value = t.defaultStartTime;
+      document.getElementById('tfEnd').value = t.defaultEndTime;
+      document.getElementById('tfBreak').value = t.defaultBreakHours;
+      toggleAddTypeForm(true);
+    }
+
+    function saveWorkerTypeFromForm() {
+      const name = document.getElementById('tfName').value.trim();
+      if (!name) { alert('직종명을 입력하세요.'); return; }
+      const hourly = Number(document.getElementById('tfHourly').value);
+      const daily = Number(document.getElementById('tfDaily').value);
+      const start = document.getElementById('tfStart').value;
+      const end = document.getElementById('tfEnd').value;
+      const brk = Number(document.getElementById('tfBreak').value);
+
+      if (editingTypeId) {
+        const item = workerTypes.find(x => x.id === editingTypeId);
+        if (item) {
+          item.name = name;
+          item.hourlyWage = hourly;
+          item.dailyWage = daily;
+          item.defaultStartTime = start;
+          item.defaultEndTime = end;
+          item.defaultBreakHours = brk;
+        }
+      } else {
+        workerTypes.push({
+          id: 'type-' + Date.now(),
+          name,
+          hourlyWage: hourly,
+          dailyWage: daily,
+          defaultStartTime: start,
+          defaultEndTime: end,
+          defaultBreakHours: brk,
+          description: '신규 등록 직종'
+        });
+      }
+      populateTypeSelects();
+      renderWorkerTypeTable();
+      toggleAddTypeForm(false);
+      alert('✅ 인력유형 설정이 저장되었습니다.');
+    }
+
+    function deleteWorkerType(id) {
+      if (!confirm('이 인력유형을 삭제하시겠습니까?')) return;
+      workerTypes = workerTypes.filter(x => x.id !== id);
+      populateTypeSelects();
+      renderWorkerTypeTable();
+    }
+
+    // 10. 비치용 QR 안내판 (QrShareModal) - 구글 공개 웹 앱 URL 자동 추출 및 사용자 설정 완벽 지원
+    function getPublicWorkerUrl() {
+      // 1. 사용자 직접 저장 URL 우선
+      const saved = localStorage.getItem('schoolpass_public_gas_url');
+      if (saved && saved.indexOf('script.google.com/macros/s/') !== -1) {
+        return saved.split('?')[0].split('#')[0] + '?mode=worker';
+      }
+
+      // 2. 서버 주입 ScriptApp.getService().getUrl()
+      if (typeof serverWebAppUrl !== 'undefined' && serverWebAppUrl && serverWebAppUrl.indexOf('script.google.com/macros/s/') !== -1) {
+        return serverWebAppUrl.split('?')[0].split('#')[0] + '?mode=worker';
+      }
+
+      // 3. 부모 프레임 referrer
+      try {
+        if (document.referrer && document.referrer.indexOf('script.google.com/macros/s/') !== -1) {
+          return document.referrer.split('?')[0].split('#')[0] + '?mode=worker';
+        }
+      } catch (e) {}
+
+      // 4. 현재 창이 이미 script.google.com인 경우
+      if (window.location.href.indexOf('script.google.com/macros/s/') !== -1) {
+        return window.location.href.split('?')[0].split('#')[0] + '?mode=worker';
+      }
+
+      // 5. iframe(userCodeAppPanel) 환경 감지 시: 현재 주소 반환 (사용자에게 URL 입력 권장)
+      return (window.location.origin + window.location.pathname).split('?')[0] + '?mode=worker';
+    }
+
+    function openQrModal() {
+      const publicUrl = getPublicWorkerUrl();
+      const isInternal = publicUrl.indexOf('googleusercontent.com') !== -1 || publicUrl.indexOf('userCodeAppPanel') !== -1;
+
+      const inputEl = document.getElementById('customGasUrlInput');
+      if (inputEl) {
+        inputEl.value = publicUrl.replace('?mode=worker', '');
+      }
+
+      const warningEl = document.getElementById('urlWarningNotice');
+      if (warningEl) {
+        if (isInternal) {
+          warningEl.classList.remove('hidden');
+        } else {
+          warningEl.classList.add('hidden');
+        }
+      }
+
+      document.getElementById('qrImageTag').src = 'https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=' + encodeURIComponent(publicUrl) + '&color=0f766e&bgcolor=ffffff&qzone=2';
+      document.getElementById('qrPosterSchoolName').innerText = schoolSettings.schoolName;
+      document.getElementById('qrPosterSchoolFooter').innerText = schoolSettings.schoolName;
+      document.getElementById('qrPosterContact').innerText = schoolSettings.schoolOfficeContact;
+      openModal('qrModal');
+    }
+
+    function saveCustomGasUrl() {
+      const inputVal = document.getElementById('customGasUrlInput').value.trim();
+      if (!inputVal) { alert('URL을 입력해주세요.'); return; }
+      if (inputVal.indexOf('script.google.com/macros/s/') === -1) {
+        alert("⚠️ 구글 웹 앱 공식 배포 주소('https://script.google.com/macros/s/.../exec') 형식으로 입력해 주세요.");
+      }
+      localStorage.setItem('schoolpass_public_gas_url', inputVal);
+      openQrModal();
+      alert('✅ 배포 URL이 저장되었습니다! 이제 QR코드가 정식 주소로 스마트폰과 완벽 연동됩니다.');
+    }
+
+    function copyCurrentWebUrl() {
+      const workerUrl = getPublicWorkerUrl();
+      navigator.clipboard.writeText(workerUrl);
+      alert('🔗 대체인력 모바일 서명 접속 URL이 클립보드에 복사되었습니다!\n(' + workerUrl + ')');
+    }
+
+    // 11. 설정 및 결재라인 관리 (SettingsView & ApprovalLineModal)
+    function openSettingsModal() {
+      document.getElementById('settingSchoolName').value = schoolSettings.schoolName;
+      document.getElementById('settingContact').value = schoolSettings.schoolOfficeContact;
+      renderApprovalStepsList();
+      openModal('settingsModal');
+    }
+
+    function renderApprovalStepsList() {
+      const container = document.getElementById('approvalStepsList');
+      container.innerHTML = '';
+      schoolSettings.approvalLine.forEach((step, idx) => {
+        const row = document.createElement('div');
+        row.className = 'neu-inset-bar p-2.5 rounded-xl flex items-center gap-2 text-xs';
+        row.innerHTML = `
+          <span class="font-bold text-slate-500 w-5 text-center">${idx + 1}</span>
+          <input type="text" value="${step.roleName}" onchange="updateStepField(${idx}, 'roleName', this.value)" placeholder="직위/단계명 (예: 담당, 실장, 학교장)" class="neu-inset-box px-3 py-1.5 rounded-lg font-bold text-slate-800 flex-1">
+          <select onchange="updateStepField(${idx}, 'approvalType', this.value)" class="neu-inset-box px-2.5 py-1.5 rounded-lg font-bold text-slate-700">
+            <option value="일반" ${step.approvalType === '일반' ? 'selected' : ''}>일반</option>
+            <option value="전결" ${step.approvalType === '전결' ? 'selected' : ''}>전결</option>
+            <option value="대결" ${step.approvalType === '대결' ? 'selected' : ''}>대결</option>
+          </select>
+          <button onclick="removeApprovalStepRow(${idx})" class="text-rose-500 hover:text-rose-700 p-1 font-bold" title="삭제">✕</button>
+        `;
+        container.appendChild(row);
+      });
+      refreshLucide();
+    }
+
+    function updateStepField(idx, field, val) {
+      if (schoolSettings.approvalLine[idx]) {
+        schoolSettings.approvalLine[idx][field] = val;
+      }
+    }
+
+    function addApprovalStepRow() {
+      if (schoolSettings.approvalLine.length >= 5) {
+        alert('결재라인은 최대 5단계까지 등록할 수 있습니다.');
+        return;
+      }
+      schoolSettings.approvalLine.push({
+        id: 'step-' + Date.now(),
+        roleName: '교감',
+        approverName: '',
+        approvalType: '일반'
+      });
+      renderApprovalStepsList();
+    }
+
+    function removeApprovalStepRow(idx) {
+      if (schoolSettings.approvalLine.length <= 1) {
+        alert('최소 1단계(담당자) 이상이어야 합니다.');
+        return;
+      }
+      schoolSettings.approvalLine.splice(idx, 1);
+      renderApprovalStepsList();
+    }
+
+    function applyApprovalPreset(type) {
+      if (type === 'standard_chief') {
+        schoolSettings.approvalLine = [
+          { id: '1', roleName: '담당', approverName: '', approvalType: '일반' },
+          { id: '2', roleName: '실장', approverName: '', approvalType: '일반' },
+          { id: '3', roleName: '학교장', approverName: '', approvalType: '일반' }
+        ];
+      } else if (type === 'vice_principal') {
+        schoolSettings.approvalLine = [
+          { id: '1', roleName: '담당', approverName: '', approvalType: '일반' },
+          { id: '2', roleName: '교감', approverName: '', approvalType: '일반' },
+          { id: '3', roleName: '학교장', approverName: '', approvalType: '일반' }
+        ];
+      } else if (type === 'four_steps') {
+        schoolSettings.approvalLine = [
+          { id: '1', roleName: '담당', approverName: '', approvalType: '일반' },
+          { id: '2', roleName: '실장', approverName: '', approvalType: '일반' },
+          { id: '3', roleName: '교감', approverName: '', approvalType: '일반' },
+          { id: '4', roleName: '학교장', approverName: '', approvalType: '일반' }
+        ];
+      } else if (type === 'chief_jeongyeol') {
+        schoolSettings.approvalLine = [
+          { id: '1', roleName: '담당', approverName: '', approvalType: '일반' },
+          { id: '2', roleName: '실장', approverName: '', approvalType: '전결' }
+        ];
+      } else if (type === 'vice_jeongyeol') {
+        schoolSettings.approvalLine = [
+          { id: '1', roleName: '담당', approverName: '', approvalType: '일반' },
+          { id: '2', roleName: '교감', approverName: '', approvalType: '전결' }
+        ];
+      } else if (type === 'vice_daegyeol') {
+        schoolSettings.approvalLine = [
+          { id: '1', roleName: '담당', approverName: '', approvalType: '일반' },
+          { id: '2', roleName: '교감', approverName: '', approvalType: '대결' }
+        ];
+      }
+      renderApprovalStepsList();
+    }
+
+    function saveAllSettings() {
+      const sch = document.getElementById('settingSchoolName').value.trim();
+      if (!sch) { alert('학교명을 입력하세요.'); return; }
+      schoolSettings.schoolName = sch;
+      schoolSettings.schoolOfficeContact = document.getElementById('settingContact').value.trim();
+
+      const topSch = document.getElementById('topSchoolName');
+      if (topSch) topSch.innerText = sch;
+      const admBadge = document.getElementById('adminSchoolBadge');
+      if (admBadge) admBadge.innerText = sch;
+      const wrkBadge = document.getElementById('workerSchoolBadge');
+      if (wrkBadge) wrkBadge.innerText = sch;
+
+      closeModal('settingsModal');
+      alert('✅ 시스템 설정 및 결재라인이 저장되었습니다.');
+    }
+
+    // 12. 비치용 QR 출근 안내 포스터 단독 인쇄
+    function printQrPoster() {
+      const sch = schoolSettings.schoolName || '행복초등학교';
+      const qrImg = document.getElementById('qrImageTag');
+      const printQrSch = document.getElementById('printQrPosterSchoolName');
+      const printQrImg = document.getElementById('printQrPosterImg');
+      if (printQrSch) printQrSch.innerText = sch;
+      if (printQrImg && qrImg) printQrImg.src = qrImg.src;
+
+      document.body.classList.add('print-mode-qr');
+      window.print();
+      setTimeout(() => {
+        document.body.classList.remove('print-mode-qr');
+      }, 800);
+    }
+
+    // 13. 대장 A4 인쇄 서식 생성 및 인쇄
+    function buildPrintTable() {
+      document.getElementById('printDocTitle').innerText = `${schoolSettings.schoolName} 근무상황 확인대장`;
+      const appBox = document.getElementById('printApprovalBox');
+      appBox.innerHTML = '';
+
+      // 결재선 상단 헤더 행
+      let headerTr = `<tr><th rowspan="2" class="border border-slate-700 bg-slate-100 px-2 py-1 w-8">결<br>재</th>`;
+      let contentTr = `<tr class="h-14">`;
+      schoolSettings.approvalLine.forEach(st => {
+        const typeBadge = st.approvalType !== '일반' ? `<span class="block text-[10px] font-bold text-slate-600">(${st.approvalType})</span>` : '';
+        headerTr += `<th class="border border-slate-700 px-3 py-1 font-semibold min-w-[64px]">${st.roleName}${typeBadge}</th>`;
+        // 수기 서명/날인을 받으므로 결재란 내 이름은 필요없고 공란 처리
+        contentTr += `<td class="border border-slate-700 px-3 text-center align-middle"></td>`;
+      });
+      headerTr += `</tr>`;
+      contentTr += `</tr>`;
+      appBox.innerHTML = headerTr + contentTr;
+
+      // 본문 레코드 행
+      const tbody = document.getElementById('printTableBody');
+      tbody.innerHTML = '';
+      const list = getFilteredRecords();
+
+      list.forEach((r, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="border border-slate-700 py-1.5 px-1">${idx + 1}</td>
+          <td class="border border-slate-700 py-1.5 px-2 font-bold whitespace-nowrap font-mono">${formatKoreanDate(r.workDate)}</td>
+          <td class="border border-slate-700 py-1.5 px-2">${r.workerType}</td>
+          <td class="border border-slate-700 py-1.5 px-2 font-bold">${r.workerName}</td>
+          <td class="border border-slate-700 py-1.5 px-2 font-mono text-[11px]">${r.startTime}~${r.endTime}</td>
+          <td class="border border-slate-700 py-1.5 px-1 font-bold">${r.workHours}h</td>
+          <td class="border border-slate-700 py-1 px-2 h-10 text-center font-bold text-slate-800">
+            ${r.workerSignature === '서명완료' ? '서명완료' : (r.workerSignature && r.workerSignature.startsWith('data:') ? `<img src="${getSafeSig(r.workerSignature)}" class="h-7 w-20 object-contain mx-auto">` : '<span class="text-slate-400 font-normal">미서명</span>')}
+          </td>
+          <td class="border border-slate-700 py-1 px-2 h-10 text-center font-bold text-slate-800">
+            ${r.verifierSignature === '서명완료' ? (r.verifierName ? `${r.verifierName}` : '서명완료') : (r.verifierSignature && r.verifierSignature.startsWith('data:') ? `<img src="${getSafeSig(r.verifierSignature)}" class="h-7 w-20 object-contain mx-auto">` : '')}
+          </td>
+          <!-- 인쇄나 PDF 저장 시 비고란은 수기로 작성할 수 있게 비워둠 -->
+          <td class="border border-slate-700 py-1.5 px-2 text-center"></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function printA4Register() {
+      document.body.classList.remove('print-mode-qr');
+      buildPrintTable();
+      window.print();
+    }
+
+    function exportToPdf() {
+      document.body.classList.remove('print-mode-qr');
+      buildPrintTable();
+      const printDoc = document.getElementById('printArea');
+      
+      // 스크롤 상단 이동 및 상단 절대 위치 배치 (PDF 중앙 쏠림 완전 방지)
+      window.scrollTo(0, 0);
+
+      const originalDisplay = printDoc.style.display;
+      const originalPosition = printDoc.style.position;
+      const originalTop = printDoc.style.top;
+      const originalLeft = printDoc.style.left;
+      const originalWidth = printDoc.style.width;
+      const originalBg = printDoc.style.background;
+      const originalZIndex = printDoc.style.zIndex;
+
+      printDoc.style.setProperty('display', 'block', 'important');
+      printDoc.style.position = 'absolute';
+      printDoc.style.top = '0';
+      printDoc.style.left = '0';
+      printDoc.style.width = '100%';
+      printDoc.style.background = '#ffffff';
+      printDoc.style.zIndex = '99999';
+
+      const opt = {
+        margin: [10, 8, 10, 8],
+        filename: `${schoolSettings.schoolName}_근무상황확인대장_${new Date().toISOString().slice(0, 10)}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          scrollY: 0,
+          scrollX: 0,
+          windowWidth: 1050
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      function restorePdfStyles() {
+        printDoc.style.setProperty('display', 'none', 'important');
+        printDoc.style.position = originalPosition;
+        printDoc.style.top = originalTop;
+        printDoc.style.left = originalLeft;
+        printDoc.style.width = originalWidth;
+        printDoc.style.background = originalBg;
+        printDoc.style.zIndex = originalZIndex;
+      }
+
+      if (window.html2pdf) {
+        html2pdf().set(opt).from(printDoc).save().then(() => {
+          restorePdfStyles();
+        }).catch(err => {
+          console.error(err);
+          restorePdfStyles();
+          printA4Register();
+        });
+      } else {
+        restorePdfStyles();
+        printA4Register();
+      }
+    }
+
+    function exportToExcel() {
+      let csv = '\uFEFF순번,근무일자,인력유형,근무자성명,근무시간,인정시간(h),산출급여(원),확인여부,비고\n';
+      const list = getFilteredRecords();
+      list.forEach((r, idx) => {
+        csv += `"${idx + 1}","${r.workDate}","${r.workerType}","${r.workerName}","${r.startTime}~${r.endTime}","${r.workHours}","${r.dailyPay}","${r.verifierSignature ? '확인완료' : '대기'}","${r.notes}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `${schoolSettings.schoolName}_근무상황확인대장.csv`;
+      a.click();
+    }
+
+    function changeTab(tab) {
+      const tabs = [
+        { id: 'records', navId: 'navRecords' },
+        { id: 'edufine', navId: 'navEdufine' },
+        { id: 'workerTypes', navId: 'navWorkerTypes' },
+        { id: 'qr', navId: 'navQr' },
+        { id: 'gas', navId: 'navGas' },
+        { id: 'settings', navId: 'navSettings' }
+      ];
+
+      tabs.forEach(t => {
+        const btn = document.getElementById(t.navId);
+        if (btn) {
+          if (t.id === tab) {
+            btn.className = 'px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex items-center gap-1.5 neu-inset-bar text-slate-800 bg-[#dbe0e7]';
+          } else {
+            const isEdufine = (t.id === 'edufine');
+            btn.className = `px-3 sm:px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap flex items-center gap-1.5 neu-button ${isEdufine ? 'text-emerald-700 hover:text-emerald-900' : 'text-slate-600 hover:text-slate-800'}`;
+          }
+        }
+      });
+
+      if (tab === 'records') {
+        closeAllModals();
+        showAdminMode();
+      } else if (tab === 'edufine') {
+        openEdufineModal();
+      } else if (tab === 'workerTypes') {
+        openWorkerTypeModal();
+      } else if (tab === 'qr') {
+        openQrModal();
+      } else if (tab === 'gas') {
+        openGasModal();
+      } else if (tab === 'settings') {
+        openSettingsModal();
+      }
+      refreshLucide();
+    }
+  </script>
+</body>
+</html>

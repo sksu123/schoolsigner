@@ -1,0 +1,207 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #FFFFFF;
+  --color-surface: #EEF1F8;
+  --color-text: #1B2340;
+  --color-primary: #2C3E70;
+  --color-accent: #E4633F;
+
+  /* 파생 색상 및 디자인 시스템 토큰 */
+  --color-surface-hover: #E3E8F4;
+  --color-surface-border: #DCE3F1;
+  --color-shadow-light: #FFFFFF;
+  --color-shadow-dark: #D1D8E7;
+  --color-text-muted: #53607E;
+  --color-primary-hover: #223158;
+  --color-accent-hover: #D15230;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* ========================================================
+   [교육행정 맞춤 디자인 시스템 - 소프트 서피스 & 네이비/코랄]
+   ======================================================== */
+
+/* 1. 상단 카드 (대형 헤더 2줄 카드) */
+.neu-card-top {
+  background: var(--color-surface);
+  border-radius: 28px;
+  box-shadow: 10px 10px 24px var(--color-shadow-dark), 
+              -10px -10px 24px var(--color-shadow-light),
+              inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+              inset -2px -2px 4px rgba(180, 195, 220, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* 2. 일반 서피스 카드 (Convex) */
+.neu-card {
+  background: var(--color-surface);
+  border-radius: 20px;
+  box-shadow: 8px 8px 18px var(--color-shadow-dark), 
+              -8px -8px 18px var(--color-shadow-light);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* 3. 안쪽 그림자 막대 (Concave Inset Bar) */
+.neu-inset-bar {
+  background: var(--color-surface);
+  border-radius: 14px;
+  box-shadow: inset 3px 3px 6px var(--color-shadow-dark), 
+              inset -3px -3px 6px var(--color-shadow-light);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* 4. 부드러운 안쪽 그림자 입력창/박스 */
+.neu-inset-box {
+  background: #FFFFFF;
+  color: var(--color-text);
+  border-radius: 12px;
+  border: 1.5px solid var(--color-surface-border);
+  box-shadow: inset 2px 2px 4px rgba(209, 216, 231, 0.4);
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.neu-inset-box:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(44, 62, 112, 0.15);
+}
+
+/* 5. 표준 버튼 (서피스 버튼) */
+.neu-button {
+  background: var(--color-surface);
+  border-radius: 14px;
+  box-shadow: 4px 4px 10px var(--color-shadow-dark), 
+              -4px -4px 10px var(--color-shadow-light);
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.neu-button:hover {
+  box-shadow: 6px 6px 14px var(--color-shadow-dark), 
+              -6px -6px 14px var(--color-shadow-light);
+  background: var(--color-surface-hover);
+  transform: translateY(-1px);
+}
+
+.neu-button:active, .neu-button.active {
+  box-shadow: inset 3px 3px 6px var(--color-shadow-dark), 
+              inset -3px -3px 6px var(--color-shadow-light);
+  transform: translateY(0);
+  background: #DEE4F1;
+}
+
+/* 6. 하단 원형 버튼 (Circular Button) */
+.neu-circle-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 5px 5px 12px var(--color-shadow-dark), 
+              -5px -5px 12px var(--color-shadow-light);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  color: var(--color-primary);
+}
+
+.neu-circle-btn:hover {
+  box-shadow: 7px 7px 16px var(--color-shadow-dark), 
+              -7px -7px 16px var(--color-shadow-light);
+  transform: scale(1.05);
+}
+
+.neu-circle-btn:active, .neu-circle-btn.active {
+  box-shadow: inset 3px 3px 6px var(--color-shadow-dark), 
+              inset -3px -3px 6px var(--color-shadow-light);
+  transform: scale(0.97);
+  background: #D8DFEE;
+  color: var(--color-accent);
+}
+
+/* 7. 하단 플로팅 컨트롤러 내비게이션 바 */
+.neu-bottom-bar {
+  background: rgba(238, 241, 248, 0.95);
+  border-radius: 36px;
+  box-shadow: 0 12px 30px rgba(27, 35, 64, 0.15), 
+              0 2px 6px rgba(27, 35, 64, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+/* 8. 프라이머리 로열 네이비 버튼 (--color-primary: #2C3E70) */
+.neu-button-primary {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  border-radius: 14px;
+  box-shadow: 4px 4px 12px rgba(44, 62, 112, 0.25), 
+              -2px -2px 6px rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  transition: all 0.18s ease;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+}
+
+.neu-button-primary:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 6px 6px 16px rgba(44, 62, 112, 0.35);
+  transform: translateY(-1px);
+}
+
+.neu-button-primary:active {
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.3);
+  transform: translateY(0);
+}
+
+/* 9. 액센트 웜 코랄 오렌지 버튼 (--color-accent: #E4633F) */
+.neu-button-accent {
+  background: var(--color-accent);
+  color: #FFFFFF;
+  border-radius: 14px;
+  box-shadow: 4px 4px 12px rgba(228, 99, 63, 0.3), 
+              -2px -2px 6px rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  transition: all 0.18s ease;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+}
+
+.neu-button-accent:hover {
+  background: var(--color-accent-hover);
+  box-shadow: 6px 6px 16px rgba(228, 99, 63, 0.4);
+  transform: translateY(-1px);
+}
+
+.neu-button-accent:active {
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.3);
+  transform: translateY(0);
+}
+
+/* 10. 인쇄 전용 CSS */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
